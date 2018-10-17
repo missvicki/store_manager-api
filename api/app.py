@@ -7,7 +7,7 @@ BAD_REQUEST = 'Bad request'
 app = Flask(__name__)
 """initializing"""
 
-products = [
+PRODUCTS = [
     {
         'product_id': 1,
         'product_name': 'Sugar',
@@ -109,7 +109,7 @@ products = [
 @app.route('storemanager/api/v1.0/products', methods=['GET'])
 def get_products():
     """get_products() -- returns all products"""
-    return jsonify({'products': products})
+    return jsonify({'products': PRODUCTS})
 
 if __name__ == '__main__':
     app.run(debug=True)
