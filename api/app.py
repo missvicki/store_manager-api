@@ -105,8 +105,13 @@ PRODUCTS = [
         'measure': 'Bottles'
     }
 ]
+
+def _get_product(productid):
+    """_get_product(productid) returns a product in products via product_id"""
+    return [product for product in PRODUCTS if product['product_id'] == productid]
+
 #get all products
-@app.route('storemanager/api/v1.0/products', methods=['GET'])
+@app.route('/storemanager/api/v1.0/products', methods=['GET'])
 def get_products():
     """get_products() -- returns all products"""
     return jsonify({'products': PRODUCTS})
