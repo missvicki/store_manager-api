@@ -21,8 +21,8 @@ class TestStoreManagerApi(unittest.TestCase):
     """TestStoreManagerApi(unittest.TestCase)--holds all tests we shall perform"""
     def setUp(self):
         """setUp(self)---"""
-        self.backup_products = deepcopy(app.PRODUCTS)
-        self.backup_sales = deepcopy(app.SALES)
+        self.backup_products = deepcopy(PRODUCTS)
+        self.backup_sales = deepcopy(SALES)
         self.app = app.app.test_client()
         self.app.testing = True
 
@@ -55,8 +55,8 @@ class TestStoreManagerApi(unittest.TestCase):
     def tearDown(self):
         """tearDown(self)---"""
         # reset app.products to initial state
-        app.PRODUCTS = self.backup_products
-        app.SALE = self.backup_sales
+        PRODUCTS = self.backup_products
+        SALE = self.backup_sales
 
 if __name__ == "__main__":
     unittest.main()
