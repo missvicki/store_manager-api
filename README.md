@@ -1,4 +1,8 @@
-[![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161204538-admin-attendant-get-specific-product)](https://travis-ci.org/missvicki/store_manager-api) [![Maintainability](https://api.codeclimate.com/v1/badges/de3d25a8dafaada7833c/maintainability)][![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=master)](https://coveralls.io/github/missvicki/store_manager-api?branch=master)
+[![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161204538-admin-attendant-get-specific-product)](https://travis-ci.org/missvicki/store_manager-api) 
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
+
+[![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=admin-attendant-get-specific-product)](https://coveralls.io/github/missvicki/store_manager-api?branch=admin-attendant-get-specific-product)
 
 
 **Store Manager API** 
