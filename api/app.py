@@ -123,7 +123,7 @@ def bad_request(error):
     return make_response(jsonify({'error': "Server error"}), 500)
 
 #home
-@app.route('/store-manager/api/v1.0/')
+@app.route('/storemanager/api/v1.0/')
 def home():
     """home()--this is home"""
     return jsonify({"Welcome": "Welcome to the Store Manger API"})
