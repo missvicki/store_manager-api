@@ -151,6 +151,12 @@ def not_found(error):
 def bad_request(error):
     """ bad_request(error) -returns error bad request"""
     return make_response(jsonify({'error': BAD_REQUEST}), 400)
+
+@app.route('/storemanager/api/v1.0')
+"""my first home"""
+def hello():
+    return 'Hello Welcome to Store Manager API'
+
 #other methods
 def _get_product(productid):
     """_get_product(productid) returns a product in products via product_id"""
