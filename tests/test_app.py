@@ -33,5 +33,13 @@ class TestStoreManagerApi(unittest.TestCase):
         self.assertEqual(response_products.status_code, 200)
         self.assertEqual(len(data_products['products']), 12)
 
+    def test_get_all_sales(self):
+        """test_get_all_sales(self)---"""
+        response_sales = self.app.get(BASE_URL_SALES)
+        data_sales = json.loads(response_sales.get_data())
+        self.assertEqual(response_sales.status_code, 200)
+        self.assertEqual(len(data_sales['sales']), 3)
+
+
 if __name__ == "__main__":
     unittest.main()
