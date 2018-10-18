@@ -122,6 +122,11 @@ def bad_request(error):
     """ bad_request(error) -returns error bad request"""
     return make_response(jsonify({'error': "Server error"}), 500)
 
+@app.route('/storemanager/api/v1.0')
+"""my first home"""
+def hello():
+    return 'Hello Welcome to Store Manager API'
+
 #get all products
 @app.route('/storemanager/api/v1.0/products', methods=['GET'])
 def get_products():
