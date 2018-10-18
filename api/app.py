@@ -1,5 +1,5 @@
 """!Flask web api for Store Manager"""
-from flask import Flask, jsonify, abort, make_response, request
+from flask import Flask, jsonify, make_response
 
 NOT_FOUND = 'Not found'
 BAD_REQUEST = 'Bad request'
@@ -106,15 +106,23 @@ PRODUCTS = [
     }
 ]
 
-def _get_product(productid):
-    """_get_product(productid) returns a product in products via product_id"""
-    return [product for product in PRODUCTS if product['product_id'] == productid]
+#error handlers
+@app.errorhandler(404)
+def not_found(error):
+    """ not_found(error) -returns error not found"""
+    return make_response(jsonify({'error': NOT_FOUND}), 404)
+
+@app.errorhandler(400)
+def bad_request(error):
+    """ bad_request(error) -returns error bad request"""
+    return make_response(jsonify({'error': BAD_REQUEST}), 400)
 
 #get all products
 @app.route('/storemanager/api/v1.0/products', methods=['GET'])
 def get_products():
     """get_products() -- returns all products"""
     return jsonify({'products': PRODUCTS})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
