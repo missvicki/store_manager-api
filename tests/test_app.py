@@ -84,7 +84,8 @@ class TestStoreManagerApi(unittest.TestCase):
     def tearDown(self):
         """tearDown(self)---"""
         # reset app.products to initial state
-        app.PRODUCTS = self.backup_products    
+        app.PRODUCTS = self.backup_products
+        app.SALE = self.backup_sales
     
 if __name__ == "__main__":
     unittest.main()
