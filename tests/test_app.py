@@ -24,9 +24,8 @@ class TestStoreManagerApi(unittest.TestCase):
     
     def test_home_route(self):
         response = self.app.get(BASE_URL)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"Welcome to the Store manager api", response.data)
-
+        self.assertEqual(response.status_code, 200, msg="Page loaded ok")
+        
     def test_get_all_products(self):
         """test_get_all_products(self)---"""
         response_products = self.app.get(BASE_URL_PRODUCTS)
