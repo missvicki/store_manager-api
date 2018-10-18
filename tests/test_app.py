@@ -18,7 +18,6 @@ class TestStoreManagerApi(unittest.TestCase):
     def setUp(self):
         """setUp(self)---"""
         self.backup_products = deepcopy(PRODUCTS)
-        self.backup_sales = deepcopy(SALES)
         self.app = app.test_client()
         self.app.testing = True
 
