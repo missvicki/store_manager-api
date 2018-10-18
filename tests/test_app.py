@@ -23,7 +23,7 @@ class TestStoreManagerApi(unittest.TestCase):
         self.app.testing = True
     
     def test_home_route(self):
-        response = self.app.get(BASE_URL)
+        response = self.testing.get(BASE_URL)
         self.assertEqual(response.status_code, 200, msg="Page loaded ok")
         
     def test_get_all_products(self):
