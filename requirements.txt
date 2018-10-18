@@ -21,3 +21,4 @@ itsdangerous == 0.24
 virtualenv == 16.0.0
 coverage==4.5.1
 coveralls==1.5.1
+gunicorn==19.9.0
