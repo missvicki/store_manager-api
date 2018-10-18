@@ -37,10 +37,10 @@ class TestStoreManagerApi(unittest.TestCase):
     def test_get_all_sales(self):
         """test_get_all_sales(self)---"""
         response_sales = self.app.get(BASE_URL_SALES)
-        data_sales = json.loads(response_sales.get_data())
-        print(data_sales)
+        data = json.loads(response_sales.get_data())
+        print(data)
         self.assertEqual(response_sales.status_code, 200, msg="Found Sales")
-        self.assertEqual(len(data_sales['sales']), 3)
+        self.assertEqual(len(data['sales']), 3)
 
     def test_get_one_product(self):
         """test__get_one_product(self)---"""
