@@ -32,7 +32,7 @@ class TestStoreManagerApi(unittest.TestCase):
         data_products = json.loads(response_products.get_data())
         print(data_products)
         self.assertEqual(response_products.status_code, 200, msg="Found Products")
-        self.assertEqual(len(data_products['products']), 11)
+        self.assertEqual(len(data_products['products']), 12)
 
     def test_get_all_sales(self):
         """test_get_all_sales(self)---"""
@@ -106,6 +106,11 @@ class TestStoreManagerApi(unittest.TestCase):
         """test_delete_product_found(self)---"""
         response = self.app.delete(GOOD_ITEM_URL_PRODUCTS)
         self.assertEqual(response.status_code, 204, msg="Product has been deleted")
+
+    def tearDown(self):
+        """tearDown(self)---"""
+        # reset app.products to initial state
+        app.PRODUCTS = self.backup_products
 
 if __name__ == "__main__":
     unittest.main()
