@@ -134,6 +134,11 @@ def _record_exists_(productid):
     """_record_exists(productid) returns a product in products via product_id"""
     return [product for product in PRODUCTS if product["product_id"] == productid]
 
+@app.route('/storemanager/api/v1.0')
+"""my first home"""
+def hello():
+    return 'Hello Welcome to Store Manager API'
+
 #get all products
 @app.route('/storemanager/api/v1.0/products', methods=['GET'])
 def get_products():
