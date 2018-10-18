@@ -2,7 +2,9 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
 
-[![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg)](https://coveralls.io/github/missvicki/store_manager-api)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/test_coverage)](https://codeclimate.com/github/missvicki/store_manager-api/test_coverage)
+
+[![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=161204538-admin-attendant-get-specific-product)](https://coveralls.io/github/missvicki/store_manager-api?branch=161204538-admin-attendant-get-specific-product)
 
 
 **Store Manager API** 
