@@ -34,14 +34,6 @@ class TestStoreManagerApi(unittest.TestCase):
         self.assertEqual(response_products.status_code, 200, msg="Found Products")
         self.assertEqual(len(data_products['products']), 12)
 
-    def test_get_all_sales(self):
-        """test_get_all_sales(self)---"""
-        response_sales = self.app.get(BASE_URL_SALES)
-        data_sales = json.loads(response_sales.get_data())
-        print(data_sales)
-        self.assertEqual(response_sales.status_code, 200, msg="Found Sales")
-        self.assertEqual(len(data['sales']), 3)
-
     def test_get_one_product(self):
         """test__get_one_product(self)---"""
         response_product = self.app.get(BASE_URL_PRODUCTS)
@@ -54,11 +46,6 @@ class TestStoreManagerApi(unittest.TestCase):
         """test_product_not_exist(self) --"""
         response_product = self.app.get(BAD_ITEM_URL_PRODUCTS)
         self.assertEqual(response_product.status_code, 404, msg="Didn't find product")
-
-    def test_sale_not_exist(self):
-        """test_sale_not_exist(self) --"""
-        response_sale = self.app.get(BAD_ITEM_URL_SALES)
-        self.assertEqual(response_sale.status_code, 404, msg="Didn't find sale")
 
     def test_post_product(self):
         """test_post_product(self)"""
