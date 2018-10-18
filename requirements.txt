@@ -19,4 +19,5 @@ click == 7.0
 flask == 1.0.2 
 itsdangerous == 0.24
 virtualenv == 16.0.0
-
+coverage==4.5.1
+coveralls==1.5.1
