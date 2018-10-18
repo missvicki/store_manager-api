@@ -1,4 +1,8 @@
-[![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161204537-admin-attendant-get-all-products)](https://travis-ci.org/missvicki/store_manager-api) [![**Maintainability](https://api.codeclimate.com/v1/badges/de3d25a8dafaada7833c/maintainability)][![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=master)](https://coveralls.io/github/missvicki/store_manager-api?branch=master)
+[![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161204537-admin-attendant-get-all-products)](https://travis-ci.org/missvicki/store_manager-api)
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
+
+[![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=161204537-admin-attendant-get-all-products)](https://coveralls.io/github/missvicki/store_manager-api?branch=161204537-admin-attendant-get-all-products)
 
 
 **Store Manager API** 
@@ -27,6 +31,7 @@ Admin and attendant can get all products
 ### Run the app
 
 `$ python app.py
+
 
 
 
