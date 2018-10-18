@@ -152,8 +152,8 @@ def bad_request(error):
     return make_response(jsonify({'error': BAD_REQUEST}), 400)
 
 @app.route('/storemanager/api/v1.0')
-"""my first home"""
 def hello():
+    """my first home"""
     return 'Hello Welcome to Store Manager API'
 
 #other methods
