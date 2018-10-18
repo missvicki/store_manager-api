@@ -11,7 +11,7 @@ from api import app
 
 BASE_URL_PRODUCTS = 'http://127.0.0.1:5000/storemanager/api/v1.0/products'
 BAD_ITEM_URL_PRODUCTS = '{}/16'.format(BASE_URL_PRODUCTS)
-GOOD_ITEM_URL_PRODUCTS = '{}/12'.format(BASE_URL_PRODUCTS)
+GOOD_ITEM_URL_PRODUCTS = '{}/10'.format(BASE_URL_PRODUCTS)
 
 BASE_URL_SALES = 'http://127.0.0.1:5000/storemanager/api/v1.0/sales'
 BAD_ITEM_URL_SALES = '{}/4'.format(BASE_URL_SALES)
@@ -101,6 +101,11 @@ class TestStoreManagerApi(unittest.TestCase):
                                       data=json.dumps(sale),
                                       content_type='application/json')
         self.assertEqual(response_sale.status_code, 400, msg="Sale already exists")
+
+    def tearDown(self):
+        """tearDown(self)---"""
+        # reset app.products to initial state
+        app.PRODUCTS = self.backup_products
 
 if __name__ == "__main__":
     unittest.main()
