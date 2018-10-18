@@ -106,6 +106,27 @@ PRODUCTS = [
     }
 ]
 
+#error handlers
+@app.errorhandler(404)
+def not_found(error):
+    """ not_found(error) -returns error not found"""
+    return make_response(jsonify({'error': NOT_FOUND}), 404)
+
+@app.errorhandler(400)
+def bad_request(error):
+    """ bad_request(error) -returns error bad request"""
+    return make_response(jsonify({'error': BAD_REQUEST}), 400)
+
+@app.errorhandler(500)
+def bad_request(error):
+    """ bad_request(error) -returns error bad request"""
+    return make_response(jsonify({'error': "Server error"}), 500)
+
+#home
+@app.route('/storemanager/api/v1.0/')
+def home():
+    """home()--this is home"""
+    return jsonify({"Welcome": "Welcome to the Store Manger API"})
 def _get_product(productid):
     """_get_product(productid) returns a product in products via product_id"""
     return [product for product in PRODUCTS if product['product_id'] == productid]
