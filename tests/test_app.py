@@ -7,23 +7,19 @@ import json
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-from api import app
+from api.app import PRODUCTS, app
 
 BASE_URL_PRODUCTS = 'http://127.0.0.1:5000/storemanager/api/v1.0/products'
 BAD_ITEM_URL_PRODUCTS = '{}/16'.format(BASE_URL_PRODUCTS)
 GOOD_ITEM_URL_PRODUCTS = '{}/10'.format(BASE_URL_PRODUCTS)
 
-BASE_URL_SALES = 'http://127.0.0.1:5000/storemanager/api/v1.0/sales'
-BAD_ITEM_URL_SALES = '{}/4'.format(BASE_URL_SALES)
-GOOD_ITEM_URL_SALES = '{}/3'.format(BASE_URL_SALES)
-
 class TestStoreManagerApi(unittest.TestCase):
     """TestStoreManagerApi(unittest.TestCase)--holds all tests we shall perform"""
     def setUp(self):
         """setUp(self)---"""
-        self.backup_products = deepcopy(app.PRODUCTS)
-        self.backup_sales = deepcopy(app.SALES)
-        self.app = app.app.test_client()
+        self.backup_products = deepcopy(PRODUCTS)
+        self.backup_sales = deepcopy(SALES)
+        self.app = app.test_client()
         self.app.testing = True
 
     def test_get_all_products(self):
@@ -33,14 +29,6 @@ class TestStoreManagerApi(unittest.TestCase):
         print(data_products)
         self.assertEqual(response_products.status_code, 200, msg="Found Products")
         self.assertEqual(len(data_products['products']), 12)
-
-    def test_get_all_sales(self):
-        """test_get_all_sales(self)---"""
-        response_sales = self.app.get(BASE_URL_SALES)
-        data_sales = json.loads(response_sales.get_data())
-        print(data_sales)
-        self.assertEqual(response_sales.status_code, 200, msg="Found Sales")
-        self.assertEqual(len(data_sales['sales']), 3)
 
     def test_get_one_product(self):
         """test__get_one_product(self)---"""
@@ -54,11 +42,6 @@ class TestStoreManagerApi(unittest.TestCase):
         """test_product_not_exist(self) --"""
         response_product = self.app.get(BAD_ITEM_URL_PRODUCTS)
         self.assertEqual(response_product.status_code, 404, msg="Didn't find product")
-
-    def test_sale_not_exist(self):
-        """test_sale_not_exist(self) --"""
-        response_sale = self.app.get(BAD_ITEM_URL_SALES)
-        self.assertEqual(response_sale.status_code, 404, msg="Didn't find sale")
 
     def test_post_product(self):
         """test_post_product(self)"""
@@ -81,27 +64,6 @@ class TestStoreManagerApi(unittest.TestCase):
                                          content_type='application/json')
         self.assertEqual(response_product.status_code, 400, msg="Item already exists")
 
-    def test_post_sales(self):
-        """test_post_sales(self)"""
-        # valid: all required fields, value takes int
-        sale = {"sale_id": 4, "product_id": 6, "product_name": "Bic Pens",
-                "attendant": "tom", "price": 5000,
-                "quantity": "1", "payment": "Cash", "date": "2018-10-18"}
-        response_sale = self.app.post(BASE_URL_SALES,
-                                      data=json.dumps(sale),
-                                      content_type='application/json')
-        self.assertEqual(response_sale.status_code, 201, msg="sale added")
-        data = json.loads(response_sale.get_data())
-        print(data)
-        # cannot add item with same name again
-        sale = {"sale_id": 4, "product_id": 6, "product_name": "Bic Pens",
-                "attendant": "tom", "price": 5000,
-                "quantity": "1", "payment": "Cash", "date": "2018-10-18"}
-        response_sale = self.app.post(BASE_URL_SALES,
-                                      data=json.dumps(sale),
-                                      content_type='application/json')
-        self.assertEqual(response_sale.status_code, 400, msg="Sale already exists")
-
     def test_delete_product_found(self):
         """test_delete_product_found(self)---"""
         response = self.app.delete(GOOD_ITEM_URL_PRODUCTS)
@@ -110,8 +72,7 @@ class TestStoreManagerApi(unittest.TestCase):
     def tearDown(self):
         """tearDown(self)---"""
         # reset app.products to initial state
-        app.PRODUCTS = self.backup_products
-        app.SALE = self.backup_sales
+        PRODUCTS = self.backup_products
 
 if __name__ == "__main__":
     unittest.main()
