@@ -6,7 +6,7 @@ python:
 install:
   - "pip install -r requirements.txt"
 
-script: - coverage run tests/test_app.py
+script: - pytest
 
 after_success: 
   - codecov
