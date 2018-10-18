@@ -105,7 +105,6 @@ PRODUCTS = [
         'measure': 'Bottles'
     }
 ]
-
 SALES = [
     {
         'product_id': 1,
@@ -151,6 +150,7 @@ def not_found(error):
 def bad_request(error):
     """ bad_request(error) -returns error bad request"""
     return make_response(jsonify({'error': BAD_REQUEST}), 400)
+
 #other methods
 def _get_product(productid):
     """_get_product(productid) returns a product in products via product_id"""
