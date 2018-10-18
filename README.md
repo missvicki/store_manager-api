@@ -2,7 +2,7 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
 
-[![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=admin-attendant-get-specific-product)](https://coveralls.io/github/missvicki/store_manager-api?branch=admin-attendant-get-specific-product)
+[![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg)](https://coveralls.io/github/missvicki/store_manager-api)
 
 
 **Store Manager API** 
