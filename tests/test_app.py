@@ -7,7 +7,7 @@ import json
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-from api import app
+from api.app import PRODUCTS, SALES, app
 
 BASE_URL_PRODUCTS = 'http://127.0.0.1:5000/storemanager/api/v1.0/products'
 BAD_ITEM_URL_PRODUCTS = '{}/16'.format(BASE_URL_PRODUCTS)
@@ -21,9 +21,9 @@ class TestStoreManagerApi(unittest.TestCase):
     """TestStoreManagerApi(unittest.TestCase)--holds all tests we shall perform"""
     def setUp(self):
         """setUp(self)---"""
-        self.backup_products = deepcopy(app.PRODUCTS)
-        self.backup_sales = deepcopy(app.SALES)
-        self.app = app.app.test_client()
+        self.backup_products = deepcopy(PRODUCTS)
+        self.backup_sales = deepcopy(SALES)
+        self.app = app.test_client()
         self.app.testing = True
 
     def test_get_all_products(self):
@@ -60,8 +60,8 @@ class TestStoreManagerApi(unittest.TestCase):
     def tearDown(self):
         """tearDown(self)---"""
         # reset app.products to initial state
-        app.PRODUCTS = self.backup_products
-        app.SALE = self.backup_sales
+        PRODUCTS = self.backup_products
+        SALE = self.backup_sales
 
 
 if __name__ == "__main__":
