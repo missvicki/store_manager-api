@@ -1,6 +1,7 @@
 [![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161204538-admin-attendant-get-specific-product)](https://travis-ci.org/missvicki/store_manager-api) 
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintai
+nability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/test_coverage)](https://codeclimate.com/github/missvicki/store_manager-api/test_coverage)
 
