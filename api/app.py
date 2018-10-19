@@ -174,13 +174,13 @@ def _record_exist_(saleid):
     return [sale for sale in SALES if sale["sale_id"] == saleid]
 
 #get all products
-@app.route('/storemanager/api/v1.0/products', methods=['GET'])
+@app.route('/storemanager/api/v1/products', methods=['GET'])
 def get_products():
     """get_products() -- returns all products"""
     return jsonify({'products': PRODUCTS})
 
 #get specific product
-@app.route('/storemanager/api/v1.0/products/<int:_id>', methods=['GET'])
+@app.route('/storemanager/api/v1/products/<int:_id>', methods=['GET'])
 def get_product(_id):
     """get_product(_id) -- returns a product via its id"""
     _product_ = _get_product(_id)
@@ -189,7 +189,7 @@ def get_product(_id):
     return jsonify({'product': _product_})
 
 #post a product
-@app.route('/storemanager/api/v1.0/products', methods=['POST'])
+@app.route('/storemanager/api/v1/products', methods=['POST'])
 def create_product():
     """create_product() --returns a product that has been added"""
     prod_id = request.get_json('product_id')
@@ -216,7 +216,7 @@ def create_product():
         return jsonify({"Success":"product '{0}' added".format(_product["product_name"])}), 201
 
 #delete a product
-@app.route('/storemanager/api/v1.0/products/<int:_id>', methods=['DELETE'])
+@app.route('/storemanager/api/v1/products/<int:_id>', methods=['DELETE'])
 def delete_product(_id):
     """delete_product(_id)--deletes product"""
     prod_ = _get_product(_id)
@@ -224,7 +224,7 @@ def delete_product(_id):
     return "Successfully deleted it", 204
 
 #add a sale
-@app.route('/storemanager/api/v1.0/sales', methods=['POST'])
+@app.route('/storemanager/api/v1/sales', methods=['POST'])
 def create_sale():
     """create_sale() --returns a product that has been added"""
     sale_id = request.get_json('sale_id')
@@ -253,7 +253,7 @@ def create_sale():
         return jsonify({"Success":"slae '{0}' added".format(_sale["sale_id"])}), 201
 
 #get all sales
-@app.route('/storemanager/api/v1.0/sales', methods=['GET'])
+@app.route('/storemanager/api/v1/sales', methods=['GET'])
 def get_sales():
     """get_sales() -- returns all sales"""
     return jsonify({'sales': SALES})
