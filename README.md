@@ -1,17 +1,20 @@
 
-[![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161204542-admin-get-all-sale-orders)](https://travis-ci.org/missvicki/store_manager-api) 
+[![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=heroku)](https://travis-ci.org/missvicki/store_manager-api) 
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
 
-[![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=161204542-admin-get-all-sale-orders)](https://coveralls.io/github/missvicki/store_manager-api?branch=161204542-admin-get-all-sale-orders)
-
+[![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=161204542-admin-get-all-sale-orders)](https://coveralls.io/github/missvicki/store_manager-api?branch=heroku)
 
 
 **Store Manager API** 
 Store Manager is a web application that helps store owners manage sales and product inventory records. This application is meant for use in a single store.    
 
+**Heroku link**
+'$  https://store-manager-api-.herokuapp.com/
+
+"navigate through adding \storemanager\api\v1\products or \sales or \products\1-for specific product"
 
 **API Functionality**
 
