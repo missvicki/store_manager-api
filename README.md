@@ -6,9 +6,6 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=heroku)](https://coveralls.io/github/missvicki/store_manager-api?branch=heroku)
 
-[![codecov](https://codecov.io/gh/missvicki/store_manager-api/branch/heroku/graph/badge.svg)](https://codecov.io/gh/missvicki/store_manager-api)
-
-
 **Store Manager API** 
 Store Manager is a web application that helps store owners manage sales and product inventory records. This application is meant for use in a single store.    
 
