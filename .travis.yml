@@ -8,7 +8,7 @@ install:
 
 script:
   - pytest
-  - coveralls
 
 after_success: 
+  - coveralls
   - codecov
