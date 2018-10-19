@@ -9,11 +9,11 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 from api.app import PRODUCTS, SALES, app
 
-BASE_URL_PRODUCTS = 'http://127.0.0.1:5000/storemanager/api/v1.0/products'
+BASE_URL_PRODUCTS = 'http://127.0.0.1:5000/storemanager/api/v1/products'
 BAD_ITEM_URL_PRODUCTS = '{}/16'.format(BASE_URL_PRODUCTS)
 GOOD_ITEM_URL_PRODUCTS = '{}/10'.format(BASE_URL_PRODUCTS)
 
-BASE_URL_SALES = 'http://127.0.0.1:5000/storemanager/api/v1.0/sales'
+BASE_URL_SALES = 'http://127.0.0.1:5000/storemanager/api/v1/sales'
 BAD_ITEM_URL_SALES = '{}/4'.format(BASE_URL_SALES)
 GOOD_ITEM_URL_SALES = '{}/3'.format(BASE_URL_SALES)
 
