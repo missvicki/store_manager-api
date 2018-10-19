@@ -16,15 +16,6 @@ Store Manager is a web application that helps store owners manage sales and prod
 
 Admin and attendant can get all products
 
-Admin can create, modify, and delete a product
-Admin can view all products or a specific product
-Admin can view all sale orders
-
-Store attendant can create a sale order of a product
-Store attendant can view all products or a specific product
-
-
-
 ## Installation
 `$ git clone 'https://github.com/missvicki/store_manager-api.git'
 
