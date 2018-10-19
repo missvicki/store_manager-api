@@ -2,7 +2,7 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=161204540-store-attendant-create-sale)](https://coveralls.io/github/missvicki/store_manager-api?branch=161204540-store-attendant-create-sale)
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
 
