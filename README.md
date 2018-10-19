@@ -4,7 +4,7 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
 
-[![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/test_coverage)](https://codeclimate.com/github/missvicki/store_manager-api/test_coverage)
 
 
 **Store Manager API** 
