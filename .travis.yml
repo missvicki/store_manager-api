@@ -6,11 +6,9 @@ python:
 install:
   - "pip install -r requirements.txt"
 
-script: 
-   - pytest
-   - coveralls
-
+script:
+  - pytest
+  - coveralls
 
 after_success: 
   - codecov
-
