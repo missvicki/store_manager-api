@@ -153,7 +153,8 @@ def bad_request(error):
 @app.route('/')
 def hello():
     """my first home"""
-    return jsonify({"Hello Welcome to Store Manager API": "navigate with storemanager\api\v1"})
+    print("naviaget through adding \storemanager\api\v1\products or \sales or \products\1-for specific product")
+    return "Hello Welcome to Store Manager API"
 
 #other methods
 def _get_product(productid):
