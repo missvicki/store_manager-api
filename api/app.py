@@ -141,7 +141,7 @@ SALES = [
     }
 ]
 
-@app.route('/storemanager/api/v1.0')
+@app.route('/')
 def hello():
     """my first home"""
     return 'Hello Welcome to Store Manager API'
