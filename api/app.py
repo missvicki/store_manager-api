@@ -144,10 +144,7 @@ SALES = [
 @app.route('/')
 def hello():
     """my first home"""
-    return jsonify({'Hello Welcome to Store Manager API': "Keep reading",
-                    'To get Products, add': '\storemanager\api\v1\products',
-                    'To get Sales, add': '\storemanager\api\v1\sales',
-                    'To get a product, add': '\storemanager\api\v1\products\1'})
+    return jsonify({"Hello Welcome to Store Manager API": "navigate with storemanager\api\v1"})
 
 #other methods
 def _get_product(productid):
