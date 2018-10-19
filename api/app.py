@@ -153,8 +153,7 @@ def bad_request(error):
 @app.route('/')
 def hello():
     """my first home"""
-    print("naviaget through adding \storemanager\api\v1\products or \sales or \products\1-for specific product")
-    return "Hello Welcome to Store Manager API"
+    return "Hello Welcome to Store Manager API, navigate through adding storemanager\api\v1\ on link"
 
 #other methods
 def _get_product(productid):
