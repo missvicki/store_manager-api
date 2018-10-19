@@ -1,10 +1,10 @@
-[![Build Status](https://travis-ci.org/missvicki/store_manager-api.svg?branch=develop)](https://travis-ci.org/missvicki/store_manager-api)
+[![Build Status](https://travis-ci.org/missvicki/store_manager-api.svg?branch=heroku)](https://travis-ci.org/missvicki/store_manager-api)
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage)
 
-[![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=develop)](https://coveralls.io/github/missvicki/store_manager-api?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=heroku)](https://coveralls.io/github/missvicki/store_manager-api?branch=heroku)
 
 
 **Store Manager API** 
