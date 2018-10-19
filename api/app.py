@@ -140,7 +140,16 @@ SALES = [
 
     }
 ]
+#error handlers
+@app.errorhandler(404)
+def not_found(error):
+    """ not_found(error) -returns error not found"""
+    return make_response(jsonify({'error': NOT_FOUND}), 404)
 
+@app.errorhandler(400)
+def bad_request(error):
+    """ bad_request(error) -returns error bad request"""
+    return make_response(jsonify({'error': BAD_REQUEST}), 400)
 @app.route('/')
 def hello():
     """my first home"""
