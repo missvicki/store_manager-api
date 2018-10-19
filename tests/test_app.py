@@ -32,7 +32,7 @@ class TestStoreManagerApi(unittest.TestCase):
         data_products = json.loads(response_products.get_data())
         print(data_products)
         self.assertEqual(response_products.status_code, 200, msg="Found Products")
-        self.assertEqual(len(data_products['products']), 11)
+        self.assertEqual(len(data_products['products']), 12)
 
     def test_get_one_product(self):
         """test__get_one_product(self)---"""
