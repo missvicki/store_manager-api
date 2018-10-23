@@ -5,6 +5,7 @@ python:
 
 env:
   global:
+    - APP_SETTINGS = tesing
     - CODECOV_TOKEN="3e72ecfa-b3cd-45cd-bc72-1f64b802c7b8"
 
 install:
