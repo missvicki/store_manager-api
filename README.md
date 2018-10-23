@@ -1,7 +1,5 @@
 
-[![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161204542-admin-get-all-sale-orders)](https://travis-ci.org/missvicki/store_manager-api) 
-
-[![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
+[![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161204542-admin-get-all-sale-orders)](https://travis-ci.org/missvicki/store_manager-api) [![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
 
 
 
