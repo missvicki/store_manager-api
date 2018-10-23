@@ -3,12 +3,19 @@ language: python
 python:
   - "3.6.5"
 
+env:
+  global:
+    - APP_SETTINGS = tesing
+    - CODECOV_TOKEN="3e72ecfa-b3cd-45cd-bc72-1f64b802c7b8"
+
 install:
-  - "pip install -r requirements.txt"
-
-script: 
-  - pytest
-  - coveralls
-
-after_success: 
+  - pip install -r requirements.txt
+  - pip install coverage
+  - pip install coveralls
+  
+script:
+  - nosetests --with-cov --cov  tests/
+  
+after_success:
   - codecov
+  - coveralls
