@@ -2,7 +2,7 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
 
-[![codecov](https://codecov.io/gh/missvicki/store_manager-api/branch/heroku/graph/badge.svg)](https://codecov.io/gh/missvicki/store_manager-api)
+[![codecov](https://codecov.io/gh/missvicki/store_manager-api/branch/develop/graph/badge.svg)](https://codecov.io/gh/missvicki/store_manager-api)
 
 [![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=heroku)](https://coveralls.io/github/missvicki/store_manager-api?branch=heroku)
 
