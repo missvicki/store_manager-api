@@ -8,7 +8,9 @@ env:
     - CODECOV_TOKEN="3e72ecfa-b3cd-45cd-bc72-1f64b802c7b8"
 
 install:
-  - "pip install -r requirements.txt"
+  - pip install -r requirements.txt
+  - pip install coverage
+  - pip install coveralls
   
 script:
   - pytest 
