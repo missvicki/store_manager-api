@@ -14,7 +14,7 @@ install:
   - pip install coveralls
   
 script:
-  - py.test --cov=store_manager-api/tests/
+  - py.test -- tests/test_app.py
   
 after_success:
   - codecov
