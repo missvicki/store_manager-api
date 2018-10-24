@@ -9,11 +9,11 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 from api.app import PRODUCTS, SALES, app
 
-BASE_URL_PRODUCTS = 'http://127.0.0.1:5000/storemanager/api/v1/products'
+BASE_URL_PRODUCTS = 'http://127.0.0.1:5000/api/v1/products'
 BAD_ITEM_URL_PRODUCTS = '{}/16'.format(BASE_URL_PRODUCTS)
 GOOD_ITEM_URL_PRODUCTS = '{}/10'.format(BASE_URL_PRODUCTS)
 
-BASE_URL_SALES = 'http://127.0.0.1:5000/storemanager/api/v1/sales'
+BASE_URL_SALES = 'http://127.0.0.1:5000/api/v1/sales'
 BAD_ITEM_URL_SALES = '{}/4'.format(BASE_URL_SALES)
 GOOD_ITEM_URL_SALES = '{}/3'.format(BASE_URL_SALES)
 
@@ -95,8 +95,7 @@ class TestStoreManagerApi(unittest.TestCase):
                                       content_type='application/json')
         self.assertEqual(response_sale.status_code, 201, msg="sale added")
         data = json.loads(response_sale.get_data())
-        print(data)
-        # cannot add item with same name again
+        # cannot add sale with same id again
         sale = {"sale_id": 4, "product_id": 6, "product_name": "Bic Pens",
                 "attendant": "tom", "price": 5000,
                 "quantity": "1", "payment": "Cash", "date": "2018-10-18"}

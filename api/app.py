@@ -162,7 +162,7 @@ def _get_product(productid):
     return [product for product in PRODUCTS if product['product_id'] == productid]
 
 #get all products and post a product
-@app.route('/storemanager/api/v1/products', methods=['GET', 'POST'])
+@app.route('/api/v1/products', methods=['GET', 'POST'])
 def products():
     """returns all products"""
     if request.method == 'GET':
@@ -190,7 +190,7 @@ def products():
         return jsonify({"Invalid": "Method"})
 
 #get specific product and delete a product
-@app.route('/storemanager/api/v1/products/<int:_id>', methods=['GET','DELETE'])
+@app.route('/api/v1/products/<int:_id>', methods=['GET','DELETE'])
 def _product_(_id):
     if request.method == 'GET':
         """returns a product via its id"""
@@ -209,7 +209,7 @@ def _product_(_id):
         return jsonify({"Invalid": "Method"})    
 
 #add a sale
-@app.route('/storemanager/api/v1/sales', methods=['POST'])
+@app.route('/api/v1/sales', methods=['POST'])
 def create_sale():
     """create_sale() --returns a product that has been added"""
    
@@ -235,7 +235,7 @@ def create_sale():
     return jsonify({"Success":"slae '{0}' added".format(_sale["sale_id"])}), 201
 
 #get all sales
-@app.route('/storemanager/api/v1/sales', methods=['GET'])
+@app.route('/api/v1/sales', methods=['GET'])
 def get_sales():
     """get_sales() -- returns all sales"""
     return jsonify({'sales': SALES})
