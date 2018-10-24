@@ -30,6 +30,8 @@ For installation of this project:  `$ git clone 'https://github.com/missvicki/st
 |Index|[/](https://store-manager-api-.herokuapp.com/)|
 |`Products`*POST*|[storemanager/api/v1/products](https://store-manager-api-.herokuapp.com/storemanager/api/v1/products)|
 
+--posting still under revision
+
 ## Testing the app
 
   `$nosetests --with-cov --cov  tests/`
