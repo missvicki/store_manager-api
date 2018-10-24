@@ -59,14 +59,12 @@ class TestStoreManagerApi(unittest.TestCase):
         self.assertEqual(response_product.status_code, 201, msg="product added")
         data = json.loads(response_product.get_data())
         print(data)
-        # cannot add item with same name again
-        product = {"product_id": 20, "product_name": "Pencil",
-                   "category": "Scholastic Materials", "unit_price": 2000,
-                   "quantity": "26", "measure": "Boxes"}
-        response_product = self.app.post(BASE_URL_PRODUCTS,
-                                         data=json.dumps(product),
-                                         content_type='application/json')
-        self.assertEqual(response_product.status_code, 400, msg="Item already exists")
+    
+    def test_delete(self):
+        response = self.app.delete(GOOD_ITEM_URL_PRODUCTS)
+        self.assertEqual(response.status_code, 204, msg="Product has been deleted")
+        response = self.app.delete(BAD_ITEM_URL_PRODUCTS)
+        self.assertEqual(response.status_code, 404, msg="Product has not been deleted")
 
     def test_post_sales(self):
         """test_post_sales(self)"""
@@ -80,14 +78,6 @@ class TestStoreManagerApi(unittest.TestCase):
         self.assertEqual(response_sale.status_code, 201, msg="sale added")
         data = json.loads(response_sale.get_data())
         print(data)
-        # cannot add item with same name again
-        sale = {"sale_id": 4, "product_id": 6, "product_name": "Bic Pens",
-                "attendant": "tom", "price": 5000,
-                "quantity": "1", "payment": "Cash", "date": "2018-10-18"}
-        response_sale = self.app.post(BASE_URL_SALES,
-                                      data=json.dumps(sale),
-                                      content_type='application/json')
-        self.assertEqual(response_sale.status_code, 400, msg="Sale already exists")
 
     def tearDown(self):
         """tearDown(self)---"""
