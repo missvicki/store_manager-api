@@ -175,11 +175,14 @@ def create_product():
         }
         PRODUCTS.append(_product)
         return jsonify({"Success":"product '{0}' added".format(_product["product_name"])}), 201
+
 #delete a product
 @app.route('/storemanager/api/v1/products/<int:_id>', methods=['DELETE'])
 def delete_product(_id):
     """delete_product(_id)--deletes product"""
     prod_ = _get_product(_id)
+    if len(prod_) == 0:
+        abort(404)
     PRODUCTS.remove(prod_[0])
     return "Successfully deleted it", 204
 
