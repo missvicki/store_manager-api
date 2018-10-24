@@ -117,11 +117,6 @@ def bad_request(error):
     """ bad_request(error) -returns error bad request"""
     return make_response(jsonify({'error': BAD_REQUEST}), 400)
 
-@app.errorhandler(500)
-def bad_request(error):
-    """ bad_request(error) -returns error bad request"""
-    return make_response(jsonify({'error': "Server error"}), 500)
-
 @app.route('/')
 def hello():
     """my first home"""
