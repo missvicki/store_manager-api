@@ -132,19 +132,25 @@ def _get_product(productid):
     return [product for product in PRODUCTS if product['product_id'] == productid]
 
 #get all products
-@app.route('/storemanager/api/v1/products', methods=['GET'])
-def get_products():
-    """get_products() -- returns all products"""
-    return jsonify({'products': PRODUCTS})
-    
+@app.route('/api/v1/products', methods=['GET'])
+def products():
+    """returns all products"""
+    if request.method == 'GET':
+        return jsonify({'products': PRODUCTS})
+    else:
+        return jsonify({"Invalid": "Method"})
+
 #get specific product
-@app.route('/storemanager/api/v1/products/<int:_id>', methods=['GET'])
-def get_product(_id):
-    """get_product(_id) -- returns a product via its id"""
-    _product_ = _get_product(_id)
-    if not _product_:
-        abort(404)
-    return jsonify({'products': _product_})
+@app.route('/api/v1/products/<int:_id>', methods=['GET'])
+def _product_(_id):
+    if request.method == 'GET':
+        """returns a product via its id"""
+        _product_ = _get_product(_id)
+        if not _product_:
+            abort(404)
+        return jsonify({'product': _product_})
+    else:
+        return jsonify({"Invalid": "Method"})
 
 if __name__ == '__main__':
     app.run(debug=True)
