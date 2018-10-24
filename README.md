@@ -8,25 +8,25 @@ For installation of this project:  `$ git clone 'https://github.com/missvicki/st
 
 ## Prerequisites
 
-Create a Virtual Environment e.g.: `$ virtualenv storemanager`
-Activate the environment: 
-    - For Windows: `$c:/ .\storemanager\Scripts\activate`
-    - For Linux and Mac: `$ source storemanager/bin/activate`
-Install project dependencies e.g. flask: `$ pip install -r requirements.txt`
+* Create a Virtual Environment e.g.: `$ virtualenv storemanager`
+* Activate the environment: 
+    * For Windows: `$c:/ .\storemanager\Scripts\activate`
+    * For Linux and Mac: `$ source storemanager/bin/activate`
+* Install project dependencies e.g. flask: `$ pip install -r requirements.txt`
 
 ## Features
 
-Admin: 
-      - can create and delete a product
-      - can get all products 
-      - can get a specific product
-      - can get all sale orders
+* Admin: 
+      * can create and delete a product
+      * can get all products 
+      * can get a specific product
+      * can get all sale orders
 
-Attendant:
-      - can create a sale order of a product
-      - can get all products 
-      - can get a specific product
-      - can create a product
+* Attendant:
+      * can create a sale order of a product
+      * can get all products 
+      * can get a specific product
+      * can create a product
 
 
 ## Heroku Endpoints
