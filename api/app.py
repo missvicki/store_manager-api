@@ -127,7 +127,7 @@ def _get_product(productid):
     """_get_product(productid) returns a product in products via product_id"""
     return [product for product in PRODUCTS if product['product_id'] == productid]
 
-#get all products and post a product
+#get all products
 @app.route('/api/v1/products', methods=['GET'])
 def products():
     """returns all products"""
