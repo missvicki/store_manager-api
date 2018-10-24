@@ -185,7 +185,7 @@ def products():
             'measure':prod_meas
         }
         PRODUCTS.append(_product)
-        return jsonify({"Success":_product}), 201
+        return jsonify({"Success":"product '{0}' added".format(_product["product_id"])}), 201
     else:
         return jsonify({"Invalid": "Method"})
 
@@ -232,7 +232,7 @@ def create_sale():
         'attendany': attendant_
     }
     SALES.append(_sale)
-    return jsonify({"Success":"slae '{0}' added".format(_sale["sale_id"])}), 201
+    return jsonify({"Success":"sale '{0}' added".format(_sale["sale_id"])}), 201
 
 #get all sales
 @app.route('/api/v1/sales', methods=['GET'])
