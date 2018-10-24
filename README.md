@@ -1,44 +1,65 @@
-[![Build Status](https://travis-ci.org/missvicki/store_manager-api.svg?branch=heroku)](https://travis-ci.org/missvicki/store_manager-api) [![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability) [![codecov](https://codecov.io/gh/missvicki/store_manager-api/branch/heroku/graph/badge.svg)](https://codecov.io/gh/missvicki/store_manager-api) [![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=heroku)](https://coveralls.io/github/missvicki/store_manager-api?branch=heroku)
+## Store Manager       [![Build Status](https://travis-ci.org/missvicki/store_manager-api.svg?branch=heroku)](https://travis-ci.org/missvicki/store_manager-api) [![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability) [![codecov](https://codecov.io/gh/missvicki/store_manager-api/branch/heroku/graph/badge.svg)](https://codecov.io/gh/missvicki/store_manager-api) [![Coverage Status](https://coveralls.io/repos/github/missvicki/store_manager-api/badge.svg?branch=heroku)](https://coveralls.io/github/missvicki/store_manager-api?branch=heroku)
 
-**Store Manager API** 
 Store Manager is a web application that helps store owners manage sales and product inventory records. This application is meant for use in a single store.    
 
-**Heroku link**
-'$  https://store-manager-api-.herokuapp.com/
+## Getting Started
 
-"navigate through adding \storemanager\api\v1\products or \sales or \products\1-for specific product"
+For installation of this project:  `$ git clone 'https://github.com/missvicki/store_manager-api.git`
 
-**API Functionality**
+## Prerequisites
 
-Admin can create, modify, and delete a product
-Admin can view all products or a specific product
-Admin can view all sale orders
+Create a Virtual Environment e.g.: `$ virtualenv storemanager`
+Activate the environment: 
+    - For Windows: `$c:/ .\storemanager\Scripts\activate`
+    - For Linux and Mac: `$ source storemanager/bin/activate`
+Install project dependencies e.g. flask: `$ pip install -r requirements.txt`
 
-Store attendant can create a sale order of a product
-Store attendant can view all products or a specific product
+## Features
 
-Admin can get all sale orders
+Admin: 
+      - can create and delete a product
+      - can get all products 
+      - can get a specific product
+      - can get all sale orders
+
+Attendant:
+      - can create a sale order of a product
+      - can get all products 
+      - can get a specific product
+      - can create a product
 
 
+## Heroku Endpoints
 
-## Installation
-`$ git clone 'https://github.com/missvicki/store_manager-api.git'
+|Endpoint|Link|
+|:---:|:---|
+|Index|[/](https://store-manager-api-.herokuapp.com/)|
+|`Products`*GET*|[storemanager/api/v1/products](https://store-manager-api-.herokuapp.com/storemanager/api/v1/products)|
+|`Products`*GET* Product|[/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/storemanager/api/v1/products/1)|
+|`Sales` *GET*|[storemanager/api/v1/sales](https://store-manager-api-.herokuapp.com/storemanager/api/v1/sales)|
 
 
-### Prerequisites `
+Note: Posting still needs revision-
 
-`$ virtualenv storemanager
+## Testing the app
 
-`$ source storemanager/Script/activate`
+  `$nosetests --with-cov --cov  tests/`
+  
 
-`$ pip install -r requirements.txt`
+## Run the app
 
-### Testing
-`$ pytest 
+`$ python run.py`
 
-### Run the app
+## Authors
 
-`$ python app.py
+* **Victor Nomwesigwa**
+
+## Acknowledgments
+
+* Thank you to Andela for the opportunity of giving me this challenge
+* My fellow Andela bootcampers, thank you for the help rendered to me when I was stranded
+
+
 
 
 
