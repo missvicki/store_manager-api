@@ -140,17 +140,18 @@ def products():
     else:
         return jsonify({"Invalid": "Method"})
 
-#get specific product
-@app.route('/api/v1/products/<int:_id>', methods=['GET'])
+#get specific product and delete a product
+@app.route('/api/v1/products/<int:_id>', methods=['GET','DELETE'])
 def _product_(_id):
     if request.method == 'GET':
         """returns a product via its id"""
         _product_ = _get_product(_id)
-        if not _product_:
-            abort(404)
-        return jsonify({'product': _product_})
+        if _product_:
+            return jsonify({'product': _product_})
+        else:
+            abort(404)         
     else:
-        return jsonify({"Invalid": "Method"})
+        return jsonify({"Invalid": "Method"}) 
 
 if __name__ == '__main__':
     app.run(debug=True)
