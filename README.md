@@ -1,4 +1,4 @@
-## Store Manager       [![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161204537-admin-attendant-get-all-products)](https://travis-ci.org/missvicki/store_manager-api )[![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability) 
+## Store Manager       [![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=ft-admin-attendant-get-all-products-161204537)](https://travis-ci.org/missvicki/store_manager-api )[![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability) 
 
 Store Manager is a web application that helps store owners manage sales and product inventory records. This application is meant for use in a single store.    
 
