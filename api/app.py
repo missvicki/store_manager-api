@@ -167,7 +167,10 @@ def _get_product(productid):
 def products():
     """returns all products"""
     if request.method == 'GET':
-        return jsonify({'products': PRODUCTS})
+        if PRODUCTS:
+            return jsonify({'products': PRODUCTS})
+        else:
+            return jsonify({'message': "There are no products"})
     elif request.method == 'POST':
         """returns a product that has been added"""
         
