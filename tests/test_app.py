@@ -51,6 +51,27 @@ class TestStoreManagerApi(unittest.TestCase):
         """test_product_not_exist(self) --"""
         response_product = self.app.get(BAD_ITEM_URL_PRODUCTS)
         self.assertEqual(response_product.status_code, 404, msg="Didn't find product")
+    
+    def test_post_product(self):
+        """test_post_product(self)"""
+        # valid: all required fields, value takes int
+        product = {"product_id": 20, "product_name": "Pencil",
+                   "category": "Scholastic Materials", "unit_price": 2000,
+                   "quantity": "26", "measure": "Boxes"}
+        response_product = self.app.post(BASE_URL_PRODUCTS,
+                                         data=json.dumps(product),
+                                         content_type='application/json')
+        self.assertEqual(response_product.status_code, 201, msg="product added")
+        data = json.loads(response_product.get_data())
+        print(data)
+        # cannot add item with same name again
+        product = {"product_id": 20, "product_name": "Pencil",
+                   "category": "Scholastic Materials", "unit_price": 2000,
+                   "quantity": "26", "measure": "Boxes"}
+        response_product = self.app.post(BASE_URL_PRODUCTS,
+                                         data=json.dumps(product),
+                                         content_type='application/json')
+        self.assertEqual(response_product.status_code, 400, msg="Item already exists")
 
     def test_sale_not_exist(self):
         """test_sale_not_exist(self) --"""
