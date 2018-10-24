@@ -17,16 +17,16 @@ For installation of this project:  `$ git clone 'https://github.com/missvicki/st
 ## Features
 
 * Admin: 
-      * can create and delete a product
-      * can get all products 
-      * can get a specific product
-      * can get all sale orders
+    * can create and delete a product
+    * can get all products 
+    * can get a specific product
+    * can get all sale orders
 
 * Attendant:
-      * can create a sale order of a product
-      * can get all products 
-      * can get a specific product
-      * can create a product
+    * can create a sale order of a product
+    * can get all products 
+    * can get a specific product
+    * can create a product
 
 
 ## Heroku Endpoints
