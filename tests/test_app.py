@@ -54,14 +54,7 @@ class TestStoreManagerApi(unittest.TestCase):
         self.assertEqual(response_product.status_code, 201, msg="product added")
         data = json.loads(response_product.get_data())
         print(data)
-        # cannot add item with same name again
-        product = {"product_id": 20, "product_name": "Pencil",
-                   "category": "Scholastic Materials", "unit_price": 2000,
-                   "quantity": "26", "measure": "Boxes"}
-        response_product = self.app.post(BASE_URL_PRODUCTS,
-                                         data=json.dumps(product),
-                                         content_type='application/json')
-        self.assertEqual(response_product.status_code, 400, msg="Item already exists")
+
 
     def tearDown(self):
         """tearDown(self)---"""

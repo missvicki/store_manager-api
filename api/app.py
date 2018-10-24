@@ -116,62 +116,33 @@ def bad_request(error):
     """ bad_request(error) -returns error bad request"""
     return make_response(jsonify({'error': BAD_REQUEST}), 400)
 
-@app.errorhandler(500)
-def bad_request(error):
-    """ bad_request(error) -returns error bad request"""
-    return make_response(jsonify({'error': "Server error"}), 500)
+@app.route('/')
+def hello():
+    """my first home"""
+    return "Hello Welcome to Store Manager API"
 
 #other methods
 def _get_product(productid):
     """_get_product(productid) returns a product in products via product_id"""
     return [product for product in PRODUCTS if product['product_id'] == productid]
 
-def _record_exists(productname):
-    """_record_exists(productname) returns a product in products via product_name"""
-    return [product for product in PRODUCTS if product["product_name"] == productname]
+#get all products and post a product
+@app.route('/api/v1/products', methods=['GET', 'POST'])
+def products():
+    """returns all products"""
+    if request.method == 'GET':
+        return jsonify({'products': PRODUCTS})
+    elif request.method == 'POST':
+        """returns a product that has been added"""
+        
+        prod_name = request.get_json('product_name')
+        prod_cat = request.get_json('category')
+        prod_price = request.get_json('unit_price')
+        prod_qty = request.get_json('quantity')
+        prod_meas = request.get_json('measure')
 
-def _record_exists_(productid):
-    """_record_exists(productid) returns a product in products via product_id"""
-    return [product for product in PRODUCTS if product["product_id"] == productid]
-
-@app.route('/storemanager/api/v1')
-def hello():
-    """my first home"""
-    return 'Hello Welcome to Store Manager API'
-
-#get all products
-@app.route('/storemanager/api/v1/products', methods=['GET'])
-def get_products():
-    """get_products() -- returns all products"""
-    return jsonify({'products': PRODUCTS})
-
-#get specific product
-@app.route('/storemanager/api/v1/products/<int:_id>', methods=['GET'])
-def get_product(_id):
-    """get_product(_id) -- returns a product via its id"""
-    _product_ = _get_product(_id)
-    if not _product_:
-        abort(404)
-    return jsonify({'products': _product_})
-
-#post a product
-@app.route('/storemanager/api/v1/products', methods=['POST'])
-def create_product():
-    """create_product() --returns a product that has been added"""
-    prod_id = request.get_json('product_id')
-    prod_name = request.get_json('product_name')
-    prod_cat = request.get_json('category')
-    prod_price = request.get_json('unit_price')
-    prod_qty = request.get_json('quantity')
-    prod_meas = request.get_json('measure')
-
-    if _record_exists(prod_name):
-        abort(400)
-    elif _record_exists_(prod_id):
-        abort(400)
-    else:
         _product = {
-            'product_id':prod_id,
+            'product_id':PRODUCTS[-1]['product_id'] + 1,
             'product_name':prod_name,
             'category':prod_cat,
             'unit_price':prod_price,
@@ -179,7 +150,21 @@ def create_product():
             'measure':prod_meas
         }
         PRODUCTS.append(_product)
-        return jsonify({"Success":"product '{0}' added".format(_product["product_name"])}), 201
+        return jsonify({"Success":_product}), 201
+    else:
+        return jsonify({"Invalid": "Method"})
+
+#get specific product and delete a product
+@app.route('/api/v1/products/<int:_id>', methods=['GET'])
+def _product_(_id):
+    if request.method == 'GET':
+        """returns a product via its id"""
+        _product_ = _get_product(_id)
+        if not _product_:
+            abort(404)
+        return jsonify({'product': _product_})
+    else:
+        return jsonify({"Invalid": "Method"})    
 
 if __name__ == '__main__':
     app.run(debug=True)
