@@ -1,5 +1,5 @@
 """!Flask web api for Store Manager"""
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify, make_response, request
 
 NOT_FOUND = 'Not found'
 BAD_REQUEST = 'Bad request'
