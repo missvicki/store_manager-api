@@ -54,7 +54,6 @@ class TestStoreManagerApi(unittest.TestCase):
     
     def test_post_product(self):
         """test_post_product(self)"""
-        # valid: all required fields, value takes int
         product = {"product_id": 20, "product_name": "Pencil",
                    "category": "Scholastic Materials", "unit_price": 2000,
                    "quantity": "26", "measure": "Boxes"}
@@ -78,7 +77,6 @@ class TestStoreManagerApi(unittest.TestCase):
     
     def test_post_sales(self):
         """test_post_sales(self)"""
-        # valid: all required fields, value takes int
         sale = {"sale_id": 4, "product_id": 6, "product_name": "Bic Pens",
                 "attendant": "tom", "price": 5000,
                 "quantity": "1", "payment": "Cash", "date": "2018-10-18"}
@@ -88,7 +86,6 @@ class TestStoreManagerApi(unittest.TestCase):
         self.assertEqual(response_sale.status_code, 201, msg="sale added")
         data = json.loads(response_sale.get_data())
         print(data)
-        # cannot add sale with same id again
 
     def tearDown(self):
         """tearDown(self)---"""
