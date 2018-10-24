@@ -150,10 +150,11 @@ def not_found(error):
 def bad_request(error):
     """ bad_request(error) -returns error bad request"""
     return make_response(jsonify({'error': BAD_REQUEST}), 400)
+
 @app.route('/')
 def hello():
     """my first home"""
-    return "Hello Welcome to Store Manager API, navigate through adding storemanager\api\v1\ on link"
+    return "Hello Welcome to Store Manager API"
 
 #other methods
 def _get_product(productid):
@@ -219,7 +220,9 @@ def create_product():
 def delete_product(_id):
     """delete_product(_id)--deletes product"""
     prod_ = _get_product(_id)
-    PRODUCTS.remove(prod_[1])
+    if len(prod_) == 0:
+        abort(404)
+    PRODUCTS.remove(prod_[0])
     return "Successfully deleted it", 204
 
 #add a sale

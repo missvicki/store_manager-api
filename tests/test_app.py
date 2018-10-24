@@ -72,16 +72,12 @@ class TestStoreManagerApi(unittest.TestCase):
                                          data=json.dumps(product),
                                          content_type='application/json')
         self.assertEqual(response_product.status_code, 400, msg="product already exists")
-    
-    def test_delete_product_found(self):
-        """test_delete_product_found(self)---"""
+
+    def test_delete(self):
         response = self.app.delete(GOOD_ITEM_URL_PRODUCTS)
         self.assertEqual(response.status_code, 204, msg="Product has been deleted")
-
-    def test_delete_product_notfound(self):
-        """test_delete_product_notfound(self)---"""
         response = self.app.delete(BAD_ITEM_URL_PRODUCTS)
-        self.assertEqual(response.status_code, 404, msg="Product has not been found")
+        self.assertEqual(response.status_code, 404, msg="Product has not been deleted")
 
     def test_sale_not_exist(self):
         """test_sale_not_exist(self) --"""
