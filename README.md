@@ -36,6 +36,8 @@ For installation of this project:  `$ git clone 'https://github.com/missvicki/st
 |Index|[/](https://store-manager-api-.herokuapp.com/)|
 |`Products`*GET*|[storemanager/api/v1/products](https://store-manager-api-.herokuapp.com/storemanager/api/v1/products)|
 |`Products`*GET* Product|[storemanager/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/storemanager/api/v1/products/1)|
+|`Products`*POST*|[storemanager/api/v1/products](https://store-manager-api-.herokuapp.com/storemanager/api/v1/products)|
+|`Products`*DELETE* Product|[storemanager/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/storemanager/api/v1/products/1)|
 |`Sales` *GET*|[storemanager/api/v1/sales](https://store-manager-api-.herokuapp.com/storemanager/api/v1/sales)|
 
 
