@@ -219,7 +219,7 @@ def create_product():
 def delete_product(_id):
     """delete_product(_id)--deletes product"""
     prod_ = _get_product(_id)
-    PRODUCTS.remove(prod_[0])
+    PRODUCTS.remove(prod_[1])
     return "Successfully deleted it", 204
 
 #add a sale
