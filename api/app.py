@@ -196,18 +196,20 @@ def _product_(_id):
     if request.method == 'GET':
         """returns a product via its id"""
         _product_ = _get_product(_id)
-        if not _product_:
-            abort(404)
-        return jsonify({'product': _product_})
+        if _product_:
+            return jsonify({'product': _product_})
+        else:
+            abort(404)         
     elif request.method == 'DELETE':
         """delete_product(_id)--deletes product"""
         prod_ = _get_product(_id)
-        if len(prod_) == 0:
+        if prod_:
+            PRODUCTS.remove(prod_[0])
+            return "Successfully deleted it", 204
+        else:
             abort(404)
-        PRODUCTS.remove(prod_[0])
-        return "Successfully deleted it", 204
     else:
-        return jsonify({"Invalid": "Method"})    
+        return jsonify({"Invalid": "Method"})   
 
 #add a sale
 @app.route('/api/v1/sales', methods=['POST'])
