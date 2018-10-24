@@ -28,7 +28,7 @@ For installation of this project:  `$ git clone 'https://github.com/missvicki/st
 |Endpoint|Link|
 |:---:|:---|
 |Index|[/](https://store-manager-api-.herokuapp.com/)|
-|`Products`*POST*|[storemanager/api/v1/products](https://store-manager-api-.herokuapp.com/storemanager/api/v1/products)|
+|`Products`*POST*|[/api/v1/products](https://store-manager-api-.herokuapp.com/api/v1/products)|
 
 --posting still under revision
 
