@@ -1,44 +1,53 @@
+## Store Manager       [![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161204542-admin-get-all-sale-orders)](https://travis-ci.org/missvicki/store_manager-api) [![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
 
-[![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161204542-admin-get-all-sale-orders)](https://travis-ci.org/missvicki/store_manager-api) [![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
-
-
-
-
-**Store Manager API** 
 Store Manager is a web application that helps store owners manage sales and product inventory records. This application is meant for use in a single store.    
 
+## Getting Started
 
-**API Functionality**
+For installation of this project:  `$ git clone 'https://github.com/missvicki/store_manager-api.git`
 
-Admin can create, modify, and delete a product
-Admin can view all products or a specific product
-Admin can view all sale orders
+## Prerequisites
 
-Store attendant can create a sale order of a product
-Store attendant can view all products or a specific product
+* Create a Virtual Environment e.g.: `$ virtualenv storemanager`
+* Activate the environment: 
+    * For Windows: `$c:/ .\storemanager\Scripts\activate`
+    * For Linux and Mac: `$ source storemanager/bin/activate`
+* Install project dependencies e.g. flask: `$ pip install -r requirements.txt`
 
-Admin can get all sale orders
+## Features
+
+* Admin: 
+    * can get all sale orders
+
+## Heroku Endpoints
+
+|Endpoint|Link|
+|:---:|:---|
+|Index|[/](https://store-manager-api-.herokuapp.com/)|
+|`Sales` *GET*|[storemanager/api/v1/sales](https://store-manager-api-.herokuapp.com/storemanager/api/v1/sales)|
 
 
+Note: Posting still needs revision-
 
-## Installation
-`$ git clone 'https://github.com/missvicki/store_manager-api.git'
+## Testing the app
+
+  `$nosetests --with-cov --cov  tests/`
+  
+
+## Run the app
+
+`$ python run.py`
+
+## Authors
+
+* **Victor Nomwesigwa**
+
+## Acknowledgments
+
+* Thank you to Andela for the opportunity of giving me this challenge
+* My fellow Andela bootcampers, thank you for the help rendered to me when I was stranded
 
 
-### Prerequisites `
-
-`$ virtualenv storemanager
-
-`$ source storemanager/Script/activate`
-
-`$ pip install -r requirements.txt`
-
-### Testing
-`$ pytest 
-
-### Run the app
-
-`$ python app.py
 
 
 
