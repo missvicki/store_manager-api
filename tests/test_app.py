@@ -77,6 +77,27 @@ class TestStoreManagerApi(unittest.TestCase):
         """test_sale_not_exist(self) --"""
         response_sale = self.app.get(BAD_ITEM_URL_SALES)
         self.assertEqual(response_sale.status_code, 404, "Didn't find sale")
+    
+    def test_post_sales(self):
+        """test_post_sales(self)"""
+        # valid: all required fields, value takes int
+        sale = {"sale_id": 4, "product_id": 6, "product_name": "Bic Pens",
+                "attendant": "tom", "price": 5000,
+                "quantity": "1", "payment": "Cash", "date": "2018-10-18"}
+        response_sale = self.app.post(BASE_URL_SALES,
+                                      data=json.dumps(sale),
+                                      content_type='application/json')
+        self.assertEqual(response_sale.status_code, 201, msg="sale added")
+        data = json.loads(response_sale.get_data())
+        print(data)
+        # cannot add item with same name again
+        sale = {"sale_id": 4, "product_id": 6, "product_name": "Bic Pens",
+                "attendant": "tom", "price": 5000,
+                "quantity": "1", "payment": "Cash", "date": "2018-10-18"}
+        response_sale = self.app.post(BASE_URL_SALES,
+                                      data=json.dumps(sale),
+                                      content_type='application/json')
+        self.assertEqual(response_sale.status_code, 400, msg="Sale already exists")
 
     def tearDown(self):
         """tearDown(self)---"""
