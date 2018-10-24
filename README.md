@@ -1,33 +1,54 @@
-[![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161281658-admin-delete-product)](https://travis-ci.org/missvicki/store_manager-api) [![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
+## Store Manager       [![**Build Status**](https://travis-ci.org/missvicki/store_manager-api.svg?branch=161281658-admin-delete-product)](https://travis-ci.org/missvicki/store_manager-api) [![Maintainability](https://api.codeclimate.com/v1/badges/a68f287f8f7b9bf13c07/maintainability)](https://codeclimate.com/github/missvicki/store_manager-api/maintainability)
 
-
-
-**Store Manager API** 
 Store Manager is a web application that helps store owners manage sales and product inventory records. This application is meant for use in a single store.    
 
+## Getting Started
 
-**API Functionality**
-Admin can delete a product
+For installation of this project:  `$ git clone 'https://github.com/missvicki/store_manager-api.git`
+
+## Prerequisites
+
+* Create a Virtual Environment e.g.: `$ virtualenv storemanager`
+* Activate the environment: 
+    * For Windows: `$c:/ .\storemanager\Scripts\activate`
+    * For Linux and Mac: `$ source storemanager/bin/activate`
+* Install project dependencies e.g. flask: `$ pip install -r requirements.txt`
+
+## Features
+
+* Admin: 
+    * can delete a product
+
+--deleting still under revision
+
+## Heroku Endpoints
+
+|Endpoint|Link|
+|:---:|:---|
+|Index|[/](https://store-manager-api-.herokuapp.com/)|
+|`Products`*DELETE* Product|[storemanager/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/storemanager/api/v1/products/1)|
 
 
-## Installation
-`$ git clone 'https://github.com/missvicki/store_manager-api.git'
+Note: Posting still needs revision-
 
+## Testing the app
 
-### Prerequisites `
+  `$nosetests --with-cov --cov  tests/`
+  
 
-`$ virtualenv storemanager
+## Run the app
 
-`$ source storemanager/Script/activate`
+`$ python run.py`
 
-`$ pip install -r requirements.txt`
+## Authors
 
-### Testing
-`$ pytest 
+* **Victor Nomwesigwa**
 
-### Run the app
+## Acknowledgments
 
-`$ python app.py
+* Thank you to Andela for the opportunity of giving me this challenge
+* My fellow Andela bootcampers, thank you for the help rendered to me when I was stranded
+
 
 
 
