@@ -44,7 +44,6 @@ class TestStoreManagerApi(unittest.TestCase):
 
     def test_post_product(self):
         """test_post_product(self)"""
-        # valid: all required fields, value takes int
         product = {"product_id": 20, "product_name": "Pencil",
                    "category": "Scholastic Materials", "unit_price": 2000,
                    "quantity": "26", "measure": "Boxes"}
