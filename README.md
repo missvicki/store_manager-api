@@ -21,10 +21,9 @@ For installation of this project:  `$ git clone 'https://github.com/missvicki/st
    
 ## Heroku Endpoints
 
-|Endpoint|Link|
-|:---:|:---|
-|Index|[/](https://store-manager-api-.herokuapp.com/)|
-|`Sales` *POST*|[/api/v1/sales](https://store-manager-api-.herokuapp.com/api/v1/sales)|
+| REQUEST | ROUTE | FUNCTIONALITY |
+| ------- | ----- | ------------- |
+| POST | [/api/v1/sales](https://store-manager-api-.herokuapp.com/api/v1/sales) | Creates a sales order |
 
 
 Note: Posting still needs revision-
