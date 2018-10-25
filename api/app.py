@@ -151,7 +151,7 @@ def bad_request(error):
 @app.route('/')
 def hello():
     """my first home"""
-    return "<h1>Hello Welcome to Store Manager API</h1>"
+    return "Hello Welcome to Store Manager API"
 
 #other methods
 def _get_product(productid):
