@@ -114,6 +114,11 @@ def bad_request(error):
     """ bad_request(error) -returns error bad request"""
     return make_response(jsonify({'error': 'BAD REQUEST'}), 400)
 
+@app.errorhandler(405)
+def mtd_not_allowed(error):
+    """ mtd_not_allowed(error) -returns error method not allowed"""
+    return make_response(jsonify({'error': "METHOD NOT ALLOWED"}), 405)
+
 @app.route('/')
 def hello():
     """my first home"""
@@ -134,7 +139,7 @@ def products():
         else:
             return jsonify({'message': "There are no products"})
     else:
-        return jsonify({"Invalid": "Method"})
+        abort(405)
 
 if __name__ == '__main__':
     app.run(debug=True)
