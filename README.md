@@ -24,10 +24,9 @@ For installation of this project:  `$ git clone 'https://github.com/missvicki/st
 
 ## Heroku Endpoints
 
-|Endpoint|Link|
-|:---:|:---|
-|Index|[/](https://store-manager-api-.herokuapp.com/)|
-|`Products`*GET* Product|[/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/api/v1/products/1)|
+| REQUEST | ROUTE | FUNCTIONALITY |
+| ------- | ----- | ------------- |
+| GET | [/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/api/v1/products/1) | Fetches a single product |
 
 ## Testing the app
 
