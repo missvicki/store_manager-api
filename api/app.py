@@ -1,9 +1,6 @@
 """!Flask web api for Store Manager"""
 from flask import Flask, jsonify, abort, make_response, request
 
-NOT_FOUND = 'Not found'
-BAD_REQUEST = 'Bad request'
-
 app = Flask(__name__)
 """initializing"""
 
@@ -144,12 +141,12 @@ SALES = [
 @app.errorhandler(404)
 def not_found(error):
     """ not_found(error) -returns error not found"""
-    return make_response(jsonify({'error': NOT_FOUND}), 404)
+    return make_response(jsonify({'error': 'NOT FOUND'}), 404)
 
 @app.errorhandler(400)
 def bad_request(error):
     """ bad_request(error) -returns error bad request"""
-    return make_response(jsonify({'error': BAD_REQUEST}), 400)
+    return make_response(jsonify({'error': 'BAD REQUEST'}), 400)
 
 @app.route('/')
 def hello():
@@ -188,7 +185,7 @@ def products():
             'measure':prod_meas
         }
         PRODUCTS.append(_product)
-        return jsonify({"Success":_product}), 201
+        return jsonify({"Success":"product '{0}' added".format(_product["product_id"])}), 201
     else:
         return jsonify({"Invalid": "Method"})
 
