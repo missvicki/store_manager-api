@@ -15,7 +15,7 @@ GOOD_ITEM_URL_PRODUCTS = '{}/10'.format(BASE_URL_PRODUCTS)
 
 class TestStoreManagerApi(unittest.TestCase):
     """TestStoreManagerApi(unittest.TestCase)--holds all tests we shall perform"""
-    def start(self):
+    def setUp(self):
         """setUp(self)---"""
         self.backup_products = deepcopy(PRODUCTS)
         self.app = app.test_client()
