@@ -148,6 +148,11 @@ def bad_request(error):
     """ bad_request(error) -returns error bad request"""
     return make_response(jsonify({'error': "BAD REQUEST"}), 400)
 
+@app.errorhandler(405)
+def mtd_not_allowed(error):
+    """ mtd_not_allowed(error) -returns error method not allowed"""
+    return make_response(jsonify({'error': "METHOD NOT ALLOWED"}), 405)
+
 @app.route('/')
 def hello():
     """my first home"""
@@ -187,7 +192,7 @@ def products():
         PRODUCTS.append(_product)
         return jsonify({"Success":"product '{0}' added".format(_product["product_id"])}), 201
     else:
-        return jsonify({"Invalid": "Method"})
+        abort(405)
 
 #get specific product and delete a product
 @app.route('/api/v1/products/<int:_id>', methods=['GET','DELETE'])
@@ -208,7 +213,7 @@ def _product_(_id):
         else:
             abort(404)
     else:
-        return jsonify({"Invalid": "Method"})    
+        abort(405)    
 
 #add a sale
 @app.route('/api/v1/sales', methods=['POST'])
