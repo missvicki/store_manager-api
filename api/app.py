@@ -223,8 +223,8 @@ def create_sale():
                     'product_id':prod_id,
                     'quantity': _quantity_ - prod_quantity
                 }
-            SALES.append(_sale)
-            return jsonify({"Success":"sale '{0}' added".format(_sale["sale_id"])}), 201
+                SALES.append(_sale)
+                return jsonify({"Success":"sale '{0}' added".format(_sale["sale_id"])}), 201
 
 #get all sales
 @app.route('/api/v1/sales', methods=['GET'])
