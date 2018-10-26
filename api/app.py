@@ -209,7 +209,7 @@ def _product_(_id):
         prod_ = _get_product(_id)
         if prod_:
             PRODUCTS.remove(prod_[0])
-            return "Successfully deleted it", 204
+            return jsonify({'product': "has been deleted"})
         else:
             abort(404)
     else:
