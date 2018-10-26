@@ -164,10 +164,14 @@ def products():
         prod_qty = data.get('quantity')
         prod_meas = data.get('measure')
 
+        productname = [product for product in PRODUCTS if product['product_id']]
+
         if not prod_name or not prod_cat or not prod_price or not prod_qty or not prod_meas:
             return jsonify({'message': "Fields can't be empty"}), 400
         elif not isinstance(prod_price, int) or not isinstance(prod_qty, int):
             return jsonify({'message': "Price and Quantity have to be integers"}), 400
+        elif prod_name is not productname:
+             return jsonify({'message': "Product already exists"}), 400
         else:
             _product = {
                 'product_id':PRODUCTS[-1]['product_id'] + 1,
@@ -217,11 +221,13 @@ def create_sale():
     else:
         for product in PRODUCTS:
             if prod_id == product['product_id']:
-                _quantity_ = product['quantity']
+                _quantity_ = product['quantity'] - prod_quantity
+                product['quantity'] = _quantity_
+                
                 _sale = {
                     'sale_id':SALES[-1]['sale_id'] + 1,
                     'product_id':prod_id,
-                    'quantity': _quantity_ - prod_quantity
+                    'quantity': prod_quantity
                 }
                 SALES.append(_sale)
                 return jsonify({"Success":"sale '{0}' added".format(_sale["sale_id"])}), 201
