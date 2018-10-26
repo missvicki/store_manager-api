@@ -221,7 +221,7 @@ def create_sale():
     else:
         for product in PRODUCTS:
             if prod_id == product['product_id']:
-                _quantity_ = product[quantity] - prod_quantity
+                _quantity_ = product['quantity'] - int(prod_quantity)
                 product['quantity'] = _quantity_
                 
                 _sale = {
