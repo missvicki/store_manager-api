@@ -140,7 +140,7 @@ def products():
     else:
         abort(405)
 
-#get specific product and delete a product
+#get specific product
 @app.route('/api/v1/products/<int:_id>', methods=['GET'])
 def _product_(_id):
     if request.method == 'GET':
