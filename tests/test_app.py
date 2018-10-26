@@ -66,7 +66,7 @@ class TestStoreManagerApi(unittest.TestCase):
 
     def test_delete(self):
         response = self.app.delete(GOOD_ITEM_URL_PRODUCTS)
-        self.assertEqual(response.status_code, 204, msg="Product has been deleted")
+        self.assertEqual(response.status_code, 200, msg="Product has been deleted")
         response = self.app.delete(BAD_ITEM_URL_PRODUCTS)
         self.assertEqual(response.status_code, 404, msg="Product has not been deleted")
 
