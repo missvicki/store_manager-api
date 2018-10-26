@@ -36,7 +36,7 @@ class TestStoreManagerApi(unittest.TestCase):
 
     def test_get_one_product(self):
         """test__get_one_product(self)---"""
-        response_product = self.app.get(GOOD_ITEM_URL_PRODUCTS)
+        response_product = self.app.get(BASE_URL_PRODUCTS)
         data_products = json.loads(response_product.get_data())
         print(data_products)
         self.assertEqual(response_product.status_code, 200, msg="Found Product")
