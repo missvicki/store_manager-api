@@ -24,6 +24,13 @@ class TestStoreManagerApi(unittest.TestCase):
         self.backup_products = deepcopy(PRODUCTS)
         self.backup_sales = deepcopy(SALES)
         self.app = app.test_client()
+        self.product = {
+            "product_name": "Sugar",
+            "category": "Food",
+            "unit_price":4100,
+            "quantity":6,
+            "measure": "kg"
+        }
         self.app.testing = True
 
     def test_get_all_products(self):
@@ -54,15 +61,16 @@ class TestStoreManagerApi(unittest.TestCase):
     
     def test_post_product(self):
         """test_post_product(self)"""
-        product = {"product_id": 20, "product_name": "Pencil",
-                   "category": "Scholastic Materials", "unit_price": 2000,
-                   "quantity": "26", "measure": "Boxes"}
         response_product = self.app.post(BASE_URL_PRODUCTS,
-                                         data=json.dumps(product),
-                                         content_type='application/json')
+                                         headers={"Content-Type": "application/json"},
+                                         data=json.dumps(self.product))
+        data = json.loads(response_product.data)
+        self.product["product_id"] = 1
+        expected_output = {
+            "message": "Product created successfully",
+        }
         self.assertEqual(response_product.status_code, 201, msg="product has been added")
-        data = json.loads(response_product.get_data())
-        print(data)
+        self.assertEqual(data, expected_output)
 
     def test_delete(self):
         response = self.app.delete(GOOD_ITEM_URL_PRODUCTS)
