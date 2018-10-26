@@ -10,7 +10,7 @@ PRODUCTS = [
         'product_name': 'Sugar',
         'category': 'Food',
         'unit_price': 4000,
-        'quantity' : '100',
+        'quantity' : 100,
         'measure' : 'Kg'
     },
     {
@@ -18,7 +18,7 @@ PRODUCTS = [
         'product_name': 'Ariel-Small',
         'category': 'Detergent',
         'unit_price': 500,
-        'quantity' : '40',
+        'quantity' : 40,
         'measure' : 'Pkts'
     },
     {
@@ -26,7 +26,7 @@ PRODUCTS = [
         'product_name': 'Ariel-Big',
         'category': 'Detergent',
         'unit_price': 2000,
-        'quantity' : '35',
+        'quantity' : 35,
         'measure': 'Pkts'
     },
     {
@@ -34,7 +34,7 @@ PRODUCTS = [
         'product_name': 'Broom',
         'category': 'Home Utilities',
         'unit_price': 1000,
-        'quantity' : '10',
+        'quantity' : 10,
         'measure': 'Sticks'
     },
     {
@@ -42,7 +42,7 @@ PRODUCTS = [
         'product_name': '98-Paged Picfare Books',
         'category': 'Scholastic Materials',
         'unit_price': 4800,
-        'quantity' : '144',
+        'quantity' : 144,
         'measure': 'Dozens'
     },
     {
@@ -50,15 +50,15 @@ PRODUCTS = [
         'product_name': 'Bic Pens',
         'category': 'Scholastic Materials',
         'unit_price': 5000,
-        'quantity' : '12',
+        'quantity' : 12,
         'measure': 'Box'
     },
     {
-        'product_id': 6,
+        'product_id': 12,
         'product_name': 'Vanilla Sponge Cake',
         'category': 'Baked Goodies',
         'unit_price': 7500,
-        'quantity' : '3',
+        'quantity' : 3,
         'measure': 'Slices'
     },
     {
@@ -66,7 +66,7 @@ PRODUCTS = [
         'product_name': 'Always',
         'category': 'Women Products',
         'unit_price': 3000,
-        'quantity' : '12',
+        'quantity' : 12,
         'measure': 'Pkts'
     },
     {
@@ -74,7 +74,7 @@ PRODUCTS = [
         'product_name': 'Vaseline Cocoa',
         'category': 'Women Products',
         'unit_price': 12000,
-        'quantity' : '10',
+        'quantity' : 10,
         'measure': 'Bottles'
     },
     {
@@ -82,7 +82,7 @@ PRODUCTS = [
         'product_name': 'Vaseline Cocoa',
         'category': 'Men Products',
         'unit_price': 12000,
-        'quantity' : '10',
+        'quantity' : 10,
         'measure': 'Bottles'
     },
     {
@@ -90,7 +90,7 @@ PRODUCTS = [
         'product_name': 'Vaseline Men',
         'category': 'Men Products',
         'unit_price': 10000,
-        'quantity' : '10',
+        'quantity' : 10,
         'measure': 'Bottles'
     },
     {
@@ -98,43 +98,26 @@ PRODUCTS = [
         'product_name': 'Zesta Strawberry Jam',
         'category': 'Food',
         'unit_price': 7500,
-        'quantity' : '5',
+        'quantity' : 5,
         'measure': 'Bottles'
     }
 ]
+
 SALES = [
     {
         'product_id': 1,
         'sale_id': 1,
-        'product_name': 'Sugar',
-        'quantity': '2',
-        'date': '2018-10-10',
-        'price': '8000',
-        'payment': 'cash',
-        'attendant': 'johnny'
-
+        'quantity': 2
     },
     {
         'product_id': 1,
         'sale_id': 2,
-        'product_name': 'Sugar',
-        'quantity': '1',
-        'date': '2018-10-12',
-        'price': '4000',
-        'payment': 'cash',
-        'attendant': 'tom'
-
+        'quantity': 1
     },
     {
         'product_id': 6,
         'sale_id': 3,
-        'product_name': 'Bic Pens',
-        'quantity': '3',
-        'date': '2018-10-10',
-        'price': '15000',
-        'payment': 'cash',
-        'attendant': 'johnny'
-
+        'quantity': 3
     }
 ]
 #error handlers
@@ -146,7 +129,7 @@ def not_found(error):
 @app.errorhandler(400)
 def bad_request(error):
     """ bad_request(error) -returns error bad request"""
-    return make_response(jsonify({'error': "BAD REQUEST"}), 400)
+    return make_response(jsonify({'error': 'BAD REQUEST'}), 400)
 
 @app.errorhandler(405)
 def mtd_not_allowed(error):
@@ -174,23 +157,28 @@ def products():
             return jsonify({'message': "There are no products"})
     elif request.method == 'POST':
         """returns a product that has been added"""
-        
-        prod_name = request.get_json('product_name')
-        prod_cat = request.get_json('category')
-        prod_price = request.get_json('unit_price')
-        prod_qty = request.get_json('quantity')
-        prod_meas = request.get_json('measure')
+        data = request.get_json()
+        prod_name = data.get('product_name')
+        prod_cat = data.get('category')
+        prod_price = data.get('unit_price')
+        prod_qty = data.get('quantity')
+        prod_meas = data.get('measure')
 
-        _product = {
-            'product_id':PRODUCTS[-1]['product_id'] + 1,
-            'product_name':prod_name,
-            'category':prod_cat,
-            'unit_price':prod_price,
-            'quantity':prod_qty,
-            'measure':prod_meas
-        }
-        PRODUCTS.append(_product)
-        return jsonify({"Success":"product '{0}' added".format(_product["product_id"])}), 201
+        if not prod_name or not prod_cat or not prod_price or not prod_qty or not prod_meas:
+            return jsonify({'message': "Fields can't be empty"}), 400
+        elif not isinstance(prod_price, int) or not isinstance(prod_qty, int):
+            return jsonify({'message': "Price and Quantity have to be integers"}), 400
+        else:
+            _product = {
+                'product_id':PRODUCTS[-1]['product_id'] + 1,
+                'product_name':prod_name,
+                'category':prod_cat,
+                'unit_price':prod_price,
+                'quantity':prod_qty,
+                'measure':prod_meas
+            }
+            PRODUCTS.append(_product)
+            return jsonify({"Success":"product '{0}' added".format(_product["product_id"])}), 201
     else:
         abort(405)
 
@@ -209,37 +197,34 @@ def _product_(_id):
         prod_ = _get_product(_id)
         if prod_:
             PRODUCTS.remove(prod_[0])
-            return jsonify({'product': "has been deleted"})
+            return jsonify({'product': "product has been deleted"})
         else:
             abort(404)
     else:
-        abort(405)    
+        abort(405)  
 
 #add a sale
 @app.route('/api/v1/sales', methods=['POST'])
 def create_sale():
     """create_sale() --returns a product that has been added"""
-   
-    prod_id = request.get_json('product_id')
-    prod_name = request.get_json('product_name')
-    price_ = request.get_json('price')
-    date_ = request.get_json('date')
-    prod_qty = request.get_json('quantity')
-    payment_ = request.get_json('payment')
-    attendant_ = request.get_json('attendant')
-
-    _sale = {
-        'sale_id':SALES[-1]['sale_id'] + 1,
-        'product_id':prod_id,
-        'product_name':prod_name,
-        'price':price_,
-        'date':date_,
-        'quantity':prod_qty,
-        'payment':payment_,
-        'attendany': attendant_
-    }
-    SALES.append(_sale)
-    return jsonify({"Success":"sale '{0}' added".format(_sale["sale_id"])}), 201
+    data = request.get_json()
+    prod_id = data.get('product_id')
+    prod_quantity = data.get('quantity')
+    if not prod_id or not prod_quantity:
+        return jsonify({'message': "Fields can't be empty"}), 400
+    elif not isinstance(prod_id, int) and not isinstance(prod_quantity, int):
+        return jsonify({'message': "Id and Quantity have to be integers"}), 400
+    else:
+        for product in PRODUCTS:
+            if prod_id == product['product_id']:
+                _quantity_ = product['quantity']
+                _sale = {
+                    'sale_id':SALES[-1]['sale_id'] + 1,
+                    'product_id':prod_id,
+                    'quantity': _quantity_ - prod_quantity
+                }
+            SALES.append(_sale)
+            return jsonify({"Success":"sale '{0}' added".format(_sale["sale_id"])}), 201
 
 #get all sales
 @app.route('/api/v1/sales', methods=['GET'])
