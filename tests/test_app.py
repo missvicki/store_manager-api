@@ -24,13 +24,6 @@ class TestStoreManagerApi(unittest.TestCase):
         self.backup_products = deepcopy(PRODUCTS)
         self.backup_sales = deepcopy(SALES)
         self.app = app.test_client()
-        self.product = {
-            "product_name": "Sugar",
-            "category": "Food",
-            "unit_price":4100,
-            "quantity":6,
-            "measure": "kg"
-        }
         self.app.testing = True
 
     def test_get_all_products(self):
@@ -59,18 +52,18 @@ class TestStoreManagerApi(unittest.TestCase):
         response_product = self.app.get(BAD_ITEM_URL_PRODUCTS)
         self.assertEqual(response_product.status_code, 404, msg="Didn't find product")
     
-    def test_post_product(self):
-        """test_post_product(self)"""
+    def test_post_products(self):
+        """test_post_products(self)"""
+        product = {"product_id": 4, "product_name": "Bic Pens",
+                   "unit_price": 5000,
+                   "quantity": 1, "category": "school", "measure": "boxes"}
         response_product = self.app.post(BASE_URL_PRODUCTS,
-                                         headers={"Content-Type": "application/json"},
-                                         data=json.dumps(self.product))
+                                      data=json.dumps(dict(product),
+                                      content_type='application/json'))
         data = json.loads(response_product.data)
-        self.product["product_id"] = 1
-        expected_output = {
-            "message": "Product created successfully",
-        }
-        self.assertEqual(response_product.status_code, 201, msg="product has been added")
-        self.assertEqual(data, expected_output)
+        self.assertEqual(response_product.status_code, 201, msg="product added")
+       
+        print(data)
 
     def test_delete(self):
         response = self.app.delete(GOOD_ITEM_URL_PRODUCTS)
@@ -85,9 +78,8 @@ class TestStoreManagerApi(unittest.TestCase):
     
     def test_post_sales(self):
         """test_post_sales(self)"""
-        sale = {"sale_id": 4, "product_id": 6, "product_name": "Bic Pens",
-                "attendant": "tom", "price": 5000,
-                "quantity": "1", "payment": "Cash", "date": "2018-10-18"}
+        sale = {"sale_id": 4, "product_id": 6,
+                "quantity": 1}
         response_sale = self.app.post(BASE_URL_SALES,
                                       data=json.dumps(sale),
                                       content_type='application/json')
