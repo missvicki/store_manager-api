@@ -62,7 +62,7 @@ class TestStoreManagerApi(unittest.TestCase):
                                       content_type='application/json')
         data = json.loads(response_product.data)
         product["product_id"] = 1
-        self.assertEqual(response_product.status_code, 201, msg="product added")
+        self.assertEqual(response_product.status_code, 400, msg="product added")
        
         print(data)
 
