@@ -54,13 +54,14 @@ class TestStoreManagerApi(unittest.TestCase):
     
     def test_post_products(self):
         """test_post_products(self)"""
-        product = {"product_id": 4, "product_name": "Bic Pens",
+        product = { "product_name": "Bic Pens",
                    "unit_price": 5000,
                    "quantity": 1, "category": "school", "measure": "boxes"}
         response_product = self.app.post(BASE_URL_PRODUCTS,
                                       data=json.dumps(product),
                                       content_type='application/json')
         data = json.loads(response_product.data)
+        self.product["product_id"] = 1
         self.assertEqual(response_product.status_code, 201, msg="product added")
        
         print(data)
