@@ -58,8 +58,8 @@ class TestStoreManagerApi(unittest.TestCase):
                    "unit_price": 5000,
                    "quantity": 1, "category": "school", "measure": "boxes"}
         response_product = self.app.post(BASE_URL_PRODUCTS,
-                                      data=json.dumps(dict(product),
-                                      content_type='application/json'))
+                                      data=json.dumps(product),
+                                      content_type='application/json')
         data = json.loads(response_product.data)
         self.assertEqual(response_product.status_code, 201, msg="product added")
        
