@@ -20,52 +20,78 @@ class DatabaseConnection:
         self.cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS products (
-                product_id SERIAL integer PRIMARY KEY UNIQUE , 
+                product_id SERIAL PRIMARY KEY UNIQUE , 
                 product_name VARCHAR(50) UNIQUE NOT NULL, 
                 category VARCHAR(50) UNIQUE NOT NULL, 
                 unit_price integer NOT NULL, 
                 quantity integer NOT NULL, 
-                measure VARCHAR(12) NOT NULL);
+                measure VARCHAR(12) NOT NULL,
+                date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
             """
         )
         """create user table"""  
         self.cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS users (
-                user_id SERIAL integer PRIMARY KEY UNIQUE, 
+                user_id SERIAL PRIMARY KEY UNIQUE, 
                 name VARCHAR(50) NOT NULL, 
                 password VARCHAR(12) UNIQUE NOT NULL, 
-                role VARCHAR(15) NOT NULL);
+                role VARCHAR(15) NOT NULL,
+                date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
             """
         )
         """create sales table"""  
         self.cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS sales (
-                sale_id SERIAL integer PRIMARY KEY UNIQUE, 
-                product_id integer NOT NULL, 
+                sale_id SERIAL PRIMARY KEY UNIQUE,  
                 user_id integer NOT NULL,
-                quantity integer NOT NULL,
-                total integer NOT NULL,
                 date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-                CONSTRAINT productid_foreign FOREIGN KEY (product_id) 
-                    REFERENCES products(product_id) 
-                    ON DELETE CASCADE 
-                    ON UPDATE CASCADE,
                 CONSTRAINT userid_foreign FOREIGN KEY (user_id) 
                     REFERENCES users(user_id) 
                     ON DELETE CASCADE 
                     ON UPDATE CASCADE);
             """
         )
-        
-    def insert_data_products(self):
-        """inserts values into tables"""
+        """create sales has products table"""
         self.cursor.execute(
             """
-            INSERT INTO products(product_name, category, unit_price, quantity, measure) 
-                VALUES({}, '{}', '{}', {}, {}, '{}')"""
+            CREATE TABLE IF NOT EXISTS saleshasproducts(
+                sale_id integer NOT NULL,
+                product_id integer NOT NULL,
+                quantity integer NOT NULL,
+                total integer NOT NULL,
+                CONSTRAINT sale_idforeignkey FOREIGN KEY (sale_id)
+                    REFERENCES sales(sale_id)
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE,
+                CONSTRAINT prodidfk FOREIGN KEY (product_id)
+                    REFERENCES products(product_id)
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE
+            );
+            """
         )
+        
+    def insert_data_products(self, data):
+        """inserts values into table products"""
+        self.cursor.execute(
+            """
+            INSERT INTO products(product_name, category, unit_price, quantity, measure, date) \
+            VALUES('{}', '{}', {}, {}, '{}', '{}')""".format(data.product_name, data.category, data.unit_price, data.quantity, data.measure, data.date)
+        )
+    def check_product_exists(self, data):
+        """check if product exists"""
+        self.cursor.execute(
+            "SELECT * FROM products WHERE product_name = '{}'", (data, )
+        )
+        return self.cursor.fetchone()
+    def getProducts(self):
+        """get all products"""
+        self.cursor.execute(
+            "SELECT * FROM products"
+        )
+        return self.cursor.fetchall()
     def insert_table(self, table):
     
         if table == "sales":

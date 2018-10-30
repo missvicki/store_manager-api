@@ -1,12 +1,13 @@
 """database models"""
 class Products:
     """product model"""
-    def __init__(self, product_name, category, unit_price, quantity, measure):
+    def __init__(self, product_name, category, unit_price, quantity, measure, date):
         self.product_name = product_name
         self.category = category
         self.unit_price = unit_price
         self.quantity = quantity
         self.measure = measure
+        self.date = date
 
 class Sales:
     """sale model"""
@@ -19,8 +20,9 @@ class Sales:
 
 class Users:
     """user model"""
-    def __init__(self, name, password, role):
+    def __init__(self, name, password, role, date):
         # self.user_id = user_id
         self.name = name
         self.password = password
         self.role = role
+        self.date = date
