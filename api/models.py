@@ -83,7 +83,7 @@ class DatabaseConnection:
     def check_product_exists_name(self, product_name):
         """check if product exists"""
         self.cursor.execute(
-            "SELECT * FROM products WHERE product_name = '{}'", (product_name)
+            "SELECT * FROM products WHERE product_name = '{}'" .format(product_name)
         )
         return self.cursor.fetchone()
     def getProducts(self):
@@ -99,7 +99,7 @@ class DatabaseConnection:
         self.cursor.execute(
             "SELECT * FROM products WHERE product_id = %s", [_pid]
         )
-        _products = self.cursor.fetchone()
+        _products = self.cursor.fetchall()
         if _products:
             for products in _products:
                 return ("product: {0}".format(products)) 
@@ -114,7 +114,13 @@ class DatabaseConnection:
         """check if product exists"""
         self.cursor.execute(
             "SELECT * FROM products WHERE product_id = %s", [product_id]) 
-        return self.cursor.fetchone()   
+        return self.cursor.fetchone()  
+    def modify_product(self, product_name, category, unit_price, quantity, measure, date, product_id):
+        """modify product"""
+        self.cursor.execute(
+            "UPDATE products SET product_name='{}', category='{}', unit_price={}, quantity={}, measure = '{}', date= '{}' WHERE product_id = {}"
+            .format(product_name, category, unit_price, quantity, measure, date, product_id)
+        ) 
     
     # def insert_table(self, table):
     

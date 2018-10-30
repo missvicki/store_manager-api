@@ -75,26 +75,51 @@ def products():
     else:
         abort(405)
 
-# get specific product and delete a product
-@app.route('/api/v1/products/<int:_id>', methods=['GET','DELETE'])
+# get specific product and delete a product and modify product
+@app.route('/api/v1/products/<int:_id>', methods=['GET','DELETE', 'PUT'])
 def _product_(_id):
     if request.method == 'GET':
         """returns a product via its id"""
         _product_ = database.getoneProduct(_id)
         if _product_:
-            return jsonify({'product': _product_})
+            return jsonify({'product': _product_}), 200
         else:
-            return jsonify({'product': "product has not been found"})
+            return jsonify({'product': "product has not been found"}), 404
     elif request.method == 'DELETE':
         """delete_product(_id)--deletes product"""
         del_prod = database.check_product_exists_id(_id)
         if not del_prod:
-            return jsonify({"error": "Product your are trying to delete does not exist"})
+            return jsonify({"error": "Product your are trying to delete does not exist"}), 404
         else:
             database.deloneProduct(_id)
-            return jsonify({"message": "Product has been deleted successfully"})   
+            return jsonify({"message": "Product has been deleted successfully"}), 200  
+    elif request.method == 'PUT':
+        """put product"""
+        prod = database.check_product_exists_id(_id)
+        if not prod:
+            return jsonify({"error": "product you are trying to modify does not exist"}), 404
+        else:
+            data = data = request.get_json()
+            prod_name = data.get('product_name')
+            prod_cat = data.get('category')
+            prod_price = data.get('unit_price')
+            prod_qty = data.get('quantity')
+            prod_meas = data.get('measure')
+            prod_date_modified = data.get('date')
+
+            # check if product exists
+            data_product_name_exist = database.check_product_exists_name(prod_name)
+
+            if not prod_name or not prod_cat or not prod_price or not prod_qty or not prod_meas or not prod_date_modified:
+                return jsonify({'message': "Fields can't be empty"}), 400
+            elif not isinstance(prod_price, int) or not isinstance(prod_qty, int):
+                return jsonify({'message': "Price and Quantity have to be integers"}), 400
+            else:
+                database.modify_product(prod_name, prod_cat, prod_price, prod_qty, prod_meas, prod_date_modified, _id)
+                return jsonify({"Success": "product has been modified"}), 201
     else:
         abort(405)  
+
 
 # #add a sale
 # @app.route('/api/v1/sales', methods=['POST'])
