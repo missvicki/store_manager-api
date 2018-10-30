@@ -108,15 +108,6 @@ class DatabaseConnection:
             return self.cursor.fetchone()
         except:
             return False
-    def check_user_exists_password(self, password):
-        """check if password exists"""
-        try:
-            self.cursor.execute(
-                "SELECT * FROM users WHERE password = '{}'" .format(password)
-            )
-            return self.cursor.fetchone()
-        except:
-            return False
     def getProducts(self):
         """get all products"""
         try:
@@ -186,6 +177,12 @@ class DatabaseConnection:
         """check if product exists"""
         self.cursor.execute(
             "SELECT * FROM users WHERE user_name = '{}'" .format(user_name)
+        )
+        return self.cursor.fetchone()
+    def check_user_exists_password(self, password):
+        """check if product exists"""
+        self.cursor.execute(
+            "SELECT * FROM users WHERE password = '{}'" .format(password)
         )
         return self.cursor.fetchone()
     def getoneUser(self, _uid):

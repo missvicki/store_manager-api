@@ -159,8 +159,14 @@ def login():
         user_name = data.get('user_name')
         password = data.get('password')
 
+        data_user_name_exist = database.check_user_exists_name(user_name)
+        data_user_pass_exist = database.check_user_exists_password(password)
         if not user_name or not password:
             return jsonify({'message': "Fields can't be empty"}), 400
+        elif not data_user_name_exist:
+            return jsonify({'error': "user name does not exist, sign up first"}), 400
+        elif not data_user_pass_exist:
+            return jsonify({'error': "invalid password"}), 400
         else:
             obj_login = Login(user_name, password)
             database.insert_table_login(obj_login)
