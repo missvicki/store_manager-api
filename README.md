@@ -1,4 +1,4 @@
-## Store Manager       [![Build Status](https://travis-ci.org/missvicki/store_manager-api.svg?branch=ft-modify-products)](https://travis-ci.org/missvicki/store_manager-api)
+## Store Manager 
 
 Store Manager is a web application that helps store owners manage sales and product inventory records. This application is meant for use in a single store.    
 
@@ -21,6 +21,7 @@ For installation of this project:  `$ git clone 'https://github.com/missvicki/st
     * can get all products 
     * can get a specific product
     * can get all sale orders
+    * can modify a single product
 
 * Attendant:
     * can create a sale order of a product
@@ -36,7 +37,9 @@ For installation of this project:  `$ git clone 'https://github.com/missvicki/st
 | GET | [/api/v1/products](https://store-manager-api-.herokuapp.com/api/v1/products) | Fetches all products|
 | GET | [/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/api/v1/products/1) | Fetches a single product |
 | GET | [/api/v1/sales](https://store-manager-api-.herokuapp.com/api/v1/sales) | Fetches all sales |
-| DELETE | [/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/api/v1/products/1) | Deletes a single product |
+| DELETE | [/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/api/v1/products/1) | Deletes a single
+ product |
+| PUT | [/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/api/v1/products/1) | Modifies a single product |
 | POST | [/api/v1/products](https://store-manager-api-.herokuapp.com/api/v1/products) | Creates a product |
 | POST | [/api/v1/sales](https://store-manager-api-.herokuapp.com/api/v1/sales) | Creates a sales order |
 
@@ -45,8 +48,11 @@ Note: Posting and deleting still needs revision-
 
 ## Testing the app
 
-  `$nosetests --with-cov --cov  tests/`
+`$nosetests --with-cov --cov  tests/`
   
+##Language
+
+**Python**: 3.6.5
 
 ## Run the app
 
