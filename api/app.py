@@ -3,9 +3,10 @@ from flask import Flask, jsonify, abort, make_response, request
 from flask_jwt import JWT, jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
 from models import DatabaseConnection
-from db import Products, Sales, Users
+from db import Products, Sales, Users, Login, SalesHasProducts
 
 database = DatabaseConnection()
+database.drop_tables()
 database.create_tables()
 
 app = Flask(__name__)
@@ -116,8 +117,8 @@ def _product_(_id):
     else:
         abort(405)  
 
-#create users
-@app.route('/api/v1/users', methods=['GET', 'POST'])
+#get users
+@app.route('/api/v1/users', methods=['GET'])
 def _users_():
     """returns all users"""
     if request.method == 'GET':
@@ -126,9 +127,10 @@ def _users_():
             return jsonify({'users': userget}), 200
         else:
             return jsonify({'message': "There are no users"}), 404
-  
-    if request.method == 'POST':
 
+# create user auth
+@app.route('/api/v1/auth/signup', methods=['POST'])
+def signup():
         """returns a user that has been added"""
         data = request.get_json()
         name = data.get('name')
@@ -137,15 +139,32 @@ def _users_():
         role = data.get('role')
         # check if user exists
         data_user_name_exist = database.check_user_exists_name(user_name)
-
+        data_user_pass_exist = database.check_user_exists_password(password)
         if not name or not user_name or not password or not role:
             return jsonify({'message': "Fields can't be empty"}), 400
         elif data_user_name_exist:
-            return jsonify({'message': "user already exists"}), 400
+            return jsonify({'error': "user name already exists"}), 400
+        elif data_user_pass_exist:
+            return jsonify({'error': "try another password-that one may have been used"}), 400
         else:
             obj_users = Users(name, user_name, password, role)
             database.insert_table_users(obj_users)
             return jsonify({"Success": "user has been added"}), 201
+# user login
+@app.route('/api/v1/auth/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        """returns a user login"""
+        data = request.get_json()
+        user_name = data.get('user_name')
+        password = data.get('password')
+
+        if not user_name or not password:
+            return jsonify({'message': "Fields can't be empty"}), 400
+        else:
+            obj_login = Login(user_name, password)
+            database.insert_table_login(obj_login)
+            return jsonify({"Success": "user has been logged in"}), 201
     else:
         abort(405)
 
@@ -188,10 +207,44 @@ def _user_(_id):
     else:
         abort(405)  
 
-# #add a sale
-# @app.route('/api/v1/sales', methods=['POST'])
-# def create_sale():
-#     """create_sale() --returns a product that has been added"""
+#add a sale
+@app.route('/api/v1/sales', methods=['GET','POST'])
+def _sale():
+    """_sale() """
+    if request.method == 'GET':
+        saleget = database.getsales()
+        if saleget:
+            return jsonify({'sales': saleget}), 200
+        else:
+            return jsonify({'message': "There are no sales"}), 404
+    elif request.method == 'POST':
+        """add sales"""
+        data = request.get_json()
+        user_id = data.get('user_id')
+        quantity = data.get('quantity')
+        product_id = data.get('product_id')
+
+        # get quantity
+        getQty = database.getQuantity(product_id)
+        # get unit price
+        getPrice = database.getPrice(product_id)
+        # calculate total
+        total = quantity * getPrice
+        # check empty fields
+        if not data or not user_id or not quantity or not product_id or not total:
+            return jsonify({'message': "Fields can't be empty"}), 400
+        # validate integers
+        elif not isinstance(user_id, int) or not isinstance(quantity, int) or not isinstance(product_id, int) or not isinstance(total, int):
+            return jsonify({'message': "fields have to be integers"}), 400
+        else:
+            obj_sales = Sales(user_id)
+            database.insert_data_sales(obj_sales)
+            obj_salepdt = SalesHasProducts(product_id, quantity, total)
+            database.insert_data_saleshasproducts(obj_salepdt)
+            return jsonify({"Success": "user has been added"}), 201
+    else:
+        abort(405)
+
 #     data = request.get_json()
 #     prod_id = data.get('product_id')
 #     prod_quantity = data.get('quantity')

@@ -1,8 +1,7 @@
 """Database models"""
 from flask import Flask, jsonify
 import psycopg2
-
-from db import Products, Sales, Users
+from db import Products, Sales, Users, SalesHasProducts, Login
 
 class DatabaseConnection:
     """Connect to the database"""
@@ -14,7 +13,11 @@ class DatabaseConnection:
             self.cursor = self.connection.cursor()
         except psycopg2.DatabaseError as anything:
             print (anything)
-    
+    def drop_tables(self):
+        """drop tables if exist"""
+        self.cursor.execute(
+            "DROP TABLE IF EXISTS products, users, sales, saleshasproducts, login CASCADE"
+        )
     def create_tables(self):
         """create product table"""    
         self.cursor.execute(
@@ -61,7 +64,7 @@ class DatabaseConnection:
             """
             CREATE TABLE IF NOT EXISTS saleshasproducts(
                 id SERIAL PRIMARY KEY UNIQUE,
-                sale_id integer NOT NULL,
+                sale_id SERIAL NOT NULL,
                 product_id integer NOT NULL,
                 quantity integer NOT NULL,
                 total integer NOT NULL,
@@ -75,38 +78,69 @@ class DatabaseConnection:
             );
             """
         )
+        """login table create"""
+        self.cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS login(
+                user_name VARCHAR(12) NOT NULL,
+                password VARCHAR(12) NOT NULL,
+                date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+            """
+        )
         
     def insert_data_products(self, data):
         """inserts values into table products"""
-        self.cursor.execute(
-            """
-            INSERT INTO products(product_name, category, unit_price, quantity, measure) \
-            VALUES('{}', '{}', {}, {}, '{}')""".format(data.product_name, data.category, data.unit_price, data.quantity, data.measure)
-        )
+        try:
+            self.cursor.execute(
+                """
+                INSERT INTO products(product_name, category, unit_price, quantity, measure) \
+                VALUES('{}', '{}', {}, {}, '{}')""".format(data.product_name, data.category, data.unit_price, data.quantity, data.measure)
+            )
+        except:
+            return False
     def check_product_exists_name(self, product_name):
         """check if product exists"""
-        self.cursor.execute(
-            "SELECT * FROM products WHERE product_name = '{}'" .format(product_name)
-        )
-        return self.cursor.fetchone()
+        try:
+            self.cursor.execute(
+                "SELECT * FROM products WHERE product_name = '{}'" .format(product_name)
+            )
+            return self.cursor.fetchone()
+        except:
+            return False
+    def check_user_exists_password(self, password):
+        """check if password exists"""
+        try:
+            self.cursor.execute(
+                "SELECT * FROM users WHERE password = '{}'" .format(password)
+            )
+            return self.cursor.fetchone()
+        except:
+            return False
     def getProducts(self):
         """get all products"""
-        self.cursor.execute(
-            "SELECT * FROM products"
-        )
-        _products = self.cursor.fetchall()
-        return _products 
+        try:
+            self.cursor.execute(
+                "SELECT * FROM products"
+            )
+            _products = self.cursor.fetchall()
+            return _products 
+        except:
+            return False
     def getoneProduct(self, _pid):
         """get one product"""
-        self.cursor.execute(
-            "SELECT * FROM products WHERE product_id = %s", [_pid]
-        )
-        _products = self.cursor.fetchall()
-        if _products:
-            for products in _products:
-                return ("product: {0}".format(products)) 
-        else:
-            return ("no product with that id")
+        try:
+            self.cursor.execute(
+                "SELECT * FROM products WHERE product_id = %s", [_pid]
+            )
+            _products = self.cursor.fetchall()
+            if _products:
+                for products in _products:
+                    return ("product: {0}".format(products)) 
+            else:
+                return ("no product with that id")
+        except:
+            return False
     def deloneProduct(self, _pid):
         """delete one product"""
         self.cursor.execute(
@@ -132,6 +166,14 @@ class DatabaseConnection:
             INSERT INTO users(name, user_name, password, role) \
             VALUES('{}', '{}', '{}', '{}')
             """.format(record.name, record.user_name, record.password, record.role)
+        )
+    def insert_table_login(self, record):
+        """add data to table login"""
+        self.cursor.execute(
+            """
+            INSERT INTO login(user_name, password) \
+            VALUES('{}', '{}')
+            """.format(record.user_name, record.password)
         )
     def getUsers(self):
         """get all users"""
@@ -174,68 +216,47 @@ class DatabaseConnection:
             "UPDATE users SET name='{}', user_name='{}', password='{}', role='{}' WHERE user_id = {}"
             .format(name, user_name, password, role, user_id)
         ) 
-    
-
-
-
-
-
-
-
-        # if table == "sales":
-        #         self.cursor.execute(
-        #                 """
-        #                 INSERT INTO sales(sale_id, product_id, user_id, quantity, total, date) 
-        #                     VALUES({}, {}, {}, {}, {}, '{}');
-        #                 """
-        #             )
-
-    #     if table == "users":
-    #             self.cursor.execute(
-    #                     """
-    #                     INSERT INTO users(user_id, name, password, role) 
-    #                         VALUES({}, '{}', '{}', '{}');
-    #                     """
-    #                 )
-    
-    # def query_tables(self, table):
-    #     """gets data in a table"""
-    #     if table == "products":
-    #         self.cursor.execute(
-    #             "SELECT * FROM products"
-    #         )
-    #         products_ = self.cursor.fetchall()
-    #         for _product_ in products_:
-    #             print("product: {0}".format(_product_))
-    #     if table == "sales":
-    #         self.cursor.execute(
-    #             "SELECT * FROM sales"
-    #         )
-    #         sales_ = self.cursor.fetchall()
-    #         for _sale_ in sales_:
-    #             print("sale: {0}".format(_sale_))
-    #     if table == "users":
-    #         self.cursor.execute(
-    #             "SELECT * FROM users"
-    #         )
-    #         users_ = self.cursor.fetchall()
-    #         for _user_ in users_:
-    #             print("product: {0}".format(_user_))
-    
-    # def update_data(self, table):
-    #     """updates table record"""
-    #     if table == "products":
-    #         self.cursor.execute(
-    #             # "UPDATE products SET product_name= iia WHERE product_id=1" 
-    #         )
-    
-    # def drop_table(self, table):
-    #     """delete table"""
-    #     if table == "products":
-    #         self.cursor.execute("DROP TABLE products")
-        
-    #     if table == "sales":
-    #         self.cursor.execute("DROP TABLE sales")
-
-    #     if table == "users":
-    #         self.cursor.execute("DROP TABLE users")   
+    def insert_data_sales(self, data):
+        """insert data into sales table"""
+        self.cursor.execute(
+            """
+            INSERT INTO sales(user_id) \
+            VALUES({})
+            """.format(data.user_id)
+        )
+    def insert_data_saleshasproducts(self, data):
+        """insert data into salesproducts table"""
+        self.cursor.execute(
+            """
+            INSERT INTO saleshasproducts(product_id, quantity, total) \
+            VALUES({}, {}, {})
+            """.format(data.product_id, data.quantity, data.total)
+        )
+    def getsales(self):
+        """get one sale"""
+        self.cursor.execute(
+            "SELECT sales.sale_id, users.user_id, products.product_id, \
+            saleshasproducts.total, saleshasproducts.quantity, sales.date \
+            FROM saleshasproducts INNER JOIN sales ON sales.sale_id = saleshasproducts.sales_id \
+            INNER JOIN products ON products.product_id = saleshasproducts.product_id" 
+        )
+        _sale = self.cursor.fetchall()
+        return _sale
+    def getQuantity(self, id_):
+        """get qty"""
+        self.cursor.execute(
+            "SELECT quantity FROM products WHERE product_id = %s", [id_]
+        )
+        return self.cursor.fetchone()
+    def getPrice(self, id_):
+        """get price"""
+        self.cursor.execute(
+            "SELECT unit_price FROM products WHERE product_id = %s", [id_]
+        )
+        return self.cursor.fetchone()
+    def getSaleId(self, id_):
+        """get sale"""
+        self.cursor.execute(
+            "SELECT sale_id FROM sales WHERE sale_id = %s", [id_]
+        )
+        return self.cursor.fetchone()
