@@ -44,9 +44,10 @@ def products():
     if request.method == 'GET':
         productget = database.getProducts()
         if productget:
-            return jsonify({'products': "products have been returned"})
+            return jsonify({'products': productget}), 200
         else:
-            return jsonify({'message': "There are no products"})
+            return jsonify({'message': "There are no products"}), 404
+  
     if request.method == 'POST':
 
         """returns a product that has been added"""
@@ -59,7 +60,7 @@ def products():
         prod_date_added = data.get('date')
 
         # check if product exists
-        data_product_name_exist = database.check_product_exists(prod_name)
+        data_product_name_exist = database.check_product_exists_name(prod_name)
 
         if not prod_name or not prod_cat or not prod_price or not prod_qty or not prod_meas or not prod_date_added:
             return jsonify({'message': "Fields can't be empty"}), 400
@@ -75,25 +76,19 @@ def products():
         abort(405)
 
 # get specific product and delete a product
-# @app.route('/api/v1/products/<int:_id>', methods=['GET','DELETE'])
-# def _product_(_id):
-#     if request.method == 'GET':
-#         """returns a product via its id"""
-#         _product_ = _get_product(_id)
-#         if _product_:
-#             return jsonify({'product': _product_})
-#         else:
-#             abort(404)         
-#     elif request.method == 'DELETE':
-#         """delete_product(_id)--deletes product"""
-#         prod_ = _get_product(_id)
-#         if prod_:
-#             PRODUCTS.remove(prod_[0])
-#             return jsonify({'product': "product has been deleted"})
-#         else:
-#             abort(404)
-#     else:
-#         abort(405)  
+@app.route('/api/v1/products/<int:_id>', methods=['GET','DELETE'])
+def _product_(_id):
+    if request.method == 'GET':
+        """returns a product via its id"""
+        _product_ = database.getoneProduct(_id)
+        if _product_:
+            return jsonify({'product': _product_})
+        else:
+            return jsonify({'product': "product has not been found"})
+                 
+      
+    else:
+        abort(405)  
 
 # #add a sale
 # @app.route('/api/v1/sales', methods=['POST'])

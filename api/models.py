@@ -1,5 +1,5 @@
 """Database models"""
-from flask import Flask
+from flask import Flask, jsonify
 import psycopg2
 
 from db import Products, Sales, Users
@@ -80,10 +80,10 @@ class DatabaseConnection:
             INSERT INTO products(product_name, category, unit_price, quantity, measure, date) \
             VALUES('{}', '{}', {}, {}, '{}', '{}')""".format(data.product_name, data.category, data.unit_price, data.quantity, data.measure, data.date)
         )
-    def check_product_exists(self, data):
+    def check_product_exists_name(self, product_name):
         """check if product exists"""
         self.cursor.execute(
-            "SELECT * FROM products WHERE product_name = '{}'", (data, )
+            "SELECT * FROM products WHERE product_name = '{}'", (product_name)
         )
         return self.cursor.fetchone()
     def getProducts(self):
@@ -91,63 +91,87 @@ class DatabaseConnection:
         self.cursor.execute(
             "SELECT * FROM products"
         )
-        return self.cursor.fetchall()
-    def insert_table(self, table):
+        _products = self.cursor.fetchall()
+        for products in _products:
+            return ("product: {0}".format(products)) 
+    def getoneProduct(self, _pid):
+        """get one product"""
+        self.cursor.execute(
+            "SELECT * FROM products WHERE product_id = %s", [_pid]
+        )
+        _products = self.cursor.fetchone()
+        if _products:
+            for products in _products:
+                return ("product: {0}".format(products)) 
+        else:
+            return ("no product with that id")
+    def deloneProduct(self, _pid):
+        """delete one product"""
+        self.cursor.execute(
+            "DELETE FROM products WHERE product_id = %s", [_pid]
+        )
+    def check_product_exists_id(self, product_id):
+        """check if product exists"""
+        self.cursor.execute(
+            "SELECT * FROM products WHERE product_id = %s", [product_id]) 
+        return self.cursor.fetchone()   
     
-        if table == "sales":
-                self.cursor.execute(
-                        """
-                        INSERT INTO sales(sale_id, product_id, user_id, quantity, total, date) 
-                            VALUES({}, {}, {}, {}, {}, '{}');
-                        """
-                    )
+    # def insert_table(self, table):
+    
+    #     if table == "sales":
+    #             self.cursor.execute(
+    #                     """
+    #                     INSERT INTO sales(sale_id, product_id, user_id, quantity, total, date) 
+    #                         VALUES({}, {}, {}, {}, {}, '{}');
+    #                     """
+    #                 )
 
-        if table == "users":
-                self.cursor.execute(
-                        """
-                        INSERT INTO users(user_id, name, password, role) 
-                            VALUES({}, '{}', '{}', '{}');
-                        """
-                    )
+    #     if table == "users":
+    #             self.cursor.execute(
+    #                     """
+    #                     INSERT INTO users(user_id, name, password, role) 
+    #                         VALUES({}, '{}', '{}', '{}');
+    #                     """
+    #                 )
     
-    def query_tables(self, table):
-        """gets data in a table"""
-        if table == "products":
-            self.cursor.execute(
-                "SELECT * FROM products"
-            )
-            products_ = self.cursor.fetchall()
-            for _product_ in products_:
-                print("product: {0}".format(_product_))
-        if table == "sales":
-            self.cursor.execute(
-                "SELECT * FROM sales"
-            )
-            sales_ = self.cursor.fetchall()
-            for _sale_ in sales_:
-                print("sale: {0}".format(_sale_))
-        if table == "users":
-            self.cursor.execute(
-                "SELECT * FROM users"
-            )
-            users_ = self.cursor.fetchall()
-            for _user_ in users_:
-                print("product: {0}".format(_user_))
+    # def query_tables(self, table):
+    #     """gets data in a table"""
+    #     if table == "products":
+    #         self.cursor.execute(
+    #             "SELECT * FROM products"
+    #         )
+    #         products_ = self.cursor.fetchall()
+    #         for _product_ in products_:
+    #             print("product: {0}".format(_product_))
+    #     if table == "sales":
+    #         self.cursor.execute(
+    #             "SELECT * FROM sales"
+    #         )
+    #         sales_ = self.cursor.fetchall()
+    #         for _sale_ in sales_:
+    #             print("sale: {0}".format(_sale_))
+    #     if table == "users":
+    #         self.cursor.execute(
+    #             "SELECT * FROM users"
+    #         )
+    #         users_ = self.cursor.fetchall()
+    #         for _user_ in users_:
+    #             print("product: {0}".format(_user_))
     
-    def update_data(self, table):
-        """updates table record"""
-        if table == "products":
-            self.cursor.execute(
-                # "UPDATE products SET product_name= iia WHERE product_id=1" 
-            )
+    # def update_data(self, table):
+    #     """updates table record"""
+    #     if table == "products":
+    #         self.cursor.execute(
+    #             # "UPDATE products SET product_name= iia WHERE product_id=1" 
+    #         )
     
-    def drop_table(self, table):
-        """delete table"""
-        if table == "products":
-            self.cursor.execute("DROP TABLE products")
+    # def drop_table(self, table):
+    #     """delete table"""
+    #     if table == "products":
+    #         self.cursor.execute("DROP TABLE products")
         
-        if table == "sales":
-            self.cursor.execute("DROP TABLE sales")
+    #     if table == "sales":
+    #         self.cursor.execute("DROP TABLE sales")
 
-        if table == "users":
-            self.cursor.execute("DROP TABLE users")   
+    #     if table == "users":
+    #         self.cursor.execute("DROP TABLE users")   
