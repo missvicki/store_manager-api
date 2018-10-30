@@ -85,8 +85,14 @@ def _product_(_id):
             return jsonify({'product': _product_})
         else:
             return jsonify({'product': "product has not been found"})
-                 
-      
+    elif request.method == 'DELETE':
+        """delete_product(_id)--deletes product"""
+        del_prod = database.check_product_exists_id(_id)
+        if not del_prod:
+            return jsonify({"error": "Product your are trying to delete does not exist"})
+        else:
+            database.deloneProduct(_id)
+            return jsonify({"message": "Product has been deleted successfully"})   
     else:
         abort(405)  
 
