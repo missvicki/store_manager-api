@@ -57,19 +57,19 @@ def products():
         prod_price = data.get('unit_price')
         prod_qty = data.get('quantity')
         prod_meas = data.get('measure')
-        prod_date_added = data.get('date')
+        
 
         # check if product exists
         data_product_name_exist = database.check_product_exists_name(prod_name)
 
-        if not prod_name or not prod_cat or not prod_price or not prod_qty or not prod_meas or not prod_date_added:
+        if not prod_name or not prod_cat or not prod_price or not prod_qty or not prod_meas:
             return jsonify({'message': "Fields can't be empty"}), 400
         elif not isinstance(prod_price, int) or not isinstance(prod_qty, int):
             return jsonify({'message': "Price and Quantity have to be integers"}), 400
         elif data_product_name_exist:
             return jsonify({'message': "Product already exists"}), 400
         else:
-            obj_products = Products(prod_name, prod_cat, prod_price, prod_qty, prod_meas, prod_date_added)
+            obj_products = Products(prod_name, prod_cat, prod_price, prod_qty, prod_meas)
             database.insert_data_products(obj_products)
             return jsonify({"Success": "product has been added"}), 201
     else:
@@ -105,21 +105,88 @@ def _product_(_id):
             prod_price = data.get('unit_price')
             prod_qty = data.get('quantity')
             prod_meas = data.get('measure')
-            prod_date_modified = data.get('date')
 
-            # check if product exists
-            data_product_name_exist = database.check_product_exists_name(prod_name)
-
-            if not prod_name or not prod_cat or not prod_price or not prod_qty or not prod_meas or not prod_date_modified:
+            if not prod_name or not prod_cat or not prod_price or not prod_qty or not prod_meas:
                 return jsonify({'message': "Fields can't be empty"}), 400
             elif not isinstance(prod_price, int) or not isinstance(prod_qty, int):
                 return jsonify({'message': "Price and Quantity have to be integers"}), 400
             else:
-                database.modify_product(prod_name, prod_cat, prod_price, prod_qty, prod_meas, prod_date_modified, _id)
+                database.modify_product(prod_name, prod_cat, prod_price, prod_qty, prod_meas, _id)
                 return jsonify({"Success": "product has been modified"}), 201
     else:
         abort(405)  
 
+#create users
+@app.route('/api/v1/users', methods=['GET', 'POST'])
+def _users_():
+    """returns all users"""
+    if request.method == 'GET':
+        userget = database.getUsers()
+        if userget:
+            return jsonify({'users': userget}), 200
+        else:
+            return jsonify({'message': "There are no users"}), 404
+  
+    if request.method == 'POST':
+
+        """returns a user that has been added"""
+        data = request.get_json()
+        name = data.get('name')
+        user_name = data.get('user_name')
+        password = data.get('password')
+        role = data.get('role')
+        # check if user exists
+        data_user_name_exist = database.check_user_exists_name(user_name)
+
+        if not name or not user_name or not password or not role:
+            return jsonify({'message': "Fields can't be empty"}), 400
+        elif data_user_name_exist:
+            return jsonify({'message': "user already exists"}), 400
+        else:
+            obj_users = Users(name, user_name, password, role)
+            database.insert_table_users(obj_users)
+            return jsonify({"Success": "user has been added"}), 201
+    else:
+        abort(405)
+
+#delete modify users
+# get specific product and delete a product and modify product
+@app.route('/api/v1/users/<int:_id>', methods=['GET','DELETE', 'PUT'])
+def _user_(_id):
+    if request.method == 'GET':
+        """returns a user via its id"""
+        _user_ = database.getoneUser(_id)
+        if _user_:
+            return jsonify({'user': _user_}), 200
+        else:
+            return jsonify({'user': "user has not been found"}), 404
+    elif request.method == 'DELETE':
+        """delete_user(_id)--deletes user"""
+        del_user = database.check_user_exists_id(_id)
+        if not del_user:
+            return jsonify({"error": "user your are trying to delete does not exist"}), 404
+        else:
+            database.deloneuser(_id)
+            return jsonify({"message": "user has been deleted successfully"}), 200
+    elif request.method == 'PUT':
+        """put user"""
+        u = database.check_user_exists_id(_id)
+        if not u:
+            return jsonify({"error": "user you are trying to modify does not exist"}), 404
+        else:
+            data = data = request.get_json()
+            name = data.get('name')
+            user_name = data.get('user_name')
+            password = data.get('password')
+            role = data.get('role')
+
+            if not name or not user_name or not password or not role:
+                return jsonify({'message': "Fields can't be empty"}), 400
+            else:
+                database.modify_user(name, user_name, password, role, _id)
+                return jsonify({"Success": "user has been modified"}), 201
+    else:
+        abort(405)  
 
 # #add a sale
 # @app.route('/api/v1/sales', methods=['POST'])

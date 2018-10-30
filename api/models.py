@@ -26,7 +26,8 @@ class DatabaseConnection:
                 unit_price integer NOT NULL, 
                 quantity integer NOT NULL, 
                 measure VARCHAR(12) NOT NULL,
-                date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+                date DATE DEFAULT CURRENT_DATE,
+                status_delete BOOLEAN DEFAULT FALSE);
             """
         )
         """create user table"""  
@@ -34,10 +35,12 @@ class DatabaseConnection:
             """
             CREATE TABLE IF NOT EXISTS users (
                 user_id SERIAL PRIMARY KEY UNIQUE, 
-                name VARCHAR(50) NOT NULL, 
+                name VARCHAR(50) NOT NULL,
+                user_name VARCHAR(12) NOT NULL UNIQUE, 
                 password VARCHAR(12) UNIQUE NOT NULL, 
                 role VARCHAR(15) NOT NULL,
-                date TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+                date DATE DEFAULT CURRENT_DATE,
+                status_delete BOOLEAN DEFAULT FALSE);
             """
         )
         """create sales table"""  
@@ -46,10 +49,10 @@ class DatabaseConnection:
             CREATE TABLE IF NOT EXISTS sales (
                 sale_id SERIAL PRIMARY KEY UNIQUE,  
                 user_id integer NOT NULL,
-                date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+                date DATE DEFAULT CURRENT_DATE,
+                status_delete BOOLEAN DEFAULT FALSE,
                 CONSTRAINT userid_foreign FOREIGN KEY (user_id) 
                     REFERENCES users(user_id) 
-                    ON DELETE CASCADE 
                     ON UPDATE CASCADE);
             """
         )
@@ -57,17 +60,17 @@ class DatabaseConnection:
         self.cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS saleshasproducts(
+                id SERIAL PRIMARY KEY UNIQUE,
                 sale_id integer NOT NULL,
                 product_id integer NOT NULL,
                 quantity integer NOT NULL,
                 total integer NOT NULL,
+                status_delete BOOLEAN DEFAULT FALSE,
                 CONSTRAINT sale_idforeignkey FOREIGN KEY (sale_id)
                     REFERENCES sales(sale_id)
-                    ON DELETE CASCADE
                     ON UPDATE CASCADE,
                 CONSTRAINT prodidfk FOREIGN KEY (product_id)
                     REFERENCES products(product_id)
-                    ON DELETE CASCADE
                     ON UPDATE CASCADE
             );
             """
@@ -77,8 +80,8 @@ class DatabaseConnection:
         """inserts values into table products"""
         self.cursor.execute(
             """
-            INSERT INTO products(product_name, category, unit_price, quantity, measure, date) \
-            VALUES('{}', '{}', {}, {}, '{}', '{}')""".format(data.product_name, data.category, data.unit_price, data.quantity, data.measure, data.date)
+            INSERT INTO products(product_name, category, unit_price, quantity, measure) \
+            VALUES('{}', '{}', {}, {}, '{}')""".format(data.product_name, data.category, data.unit_price, data.quantity, data.measure)
         )
     def check_product_exists_name(self, product_name):
         """check if product exists"""
@@ -92,8 +95,7 @@ class DatabaseConnection:
             "SELECT * FROM products"
         )
         _products = self.cursor.fetchall()
-        for products in _products:
-            return ("product: {0}".format(products)) 
+        return _products 
     def getoneProduct(self, _pid):
         """get one product"""
         self.cursor.execute(
@@ -108,29 +110,85 @@ class DatabaseConnection:
     def deloneProduct(self, _pid):
         """delete one product"""
         self.cursor.execute(
-            "DELETE FROM products WHERE product_id = %s", [_pid]
+            # "DELETE FROM products WHERE product_id = %s", [_pid]
+            "UPDATE products SET status_delete=TRUE WHERE product_id = %s", [_pid]
         )
     def check_product_exists_id(self, product_id):
         """check if product exists"""
         self.cursor.execute(
             "SELECT * FROM products WHERE product_id = %s", [product_id]) 
         return self.cursor.fetchone()  
-    def modify_product(self, product_name, category, unit_price, quantity, measure, date, product_id):
+    def modify_product(self, product_name, category, unit_price, quantity, measure, product_id):
         """modify product"""
         self.cursor.execute(
-            "UPDATE products SET product_name='{}', category='{}', unit_price={}, quantity={}, measure = '{}', date= '{}' WHERE product_id = {}"
-            .format(product_name, category, unit_price, quantity, measure, date, product_id)
+            "UPDATE products SET product_name='{}', category='{}', unit_price={}, quantity={}, measure = '{}' WHERE product_id = {}"
+            .format(product_name, category, unit_price, quantity, measure, product_id)
         ) 
     
-    # def insert_table(self, table):
+    def insert_table_users(self, record):
+        """add data to table users"""
+        self.cursor.execute(
+            """
+            INSERT INTO users(name, user_name, password, role) \
+            VALUES('{}', '{}', '{}', '{}')
+            """.format(record.name, record.user_name, record.password, record.role)
+        )
+    def getUsers(self):
+        """get all users"""
+        self.cursor.execute(
+            "SELECT * FROM users"
+        )
+        _users = self.cursor.fetchall()
+        return _users 
+    def check_user_exists_name(self, user_name):
+        """check if product exists"""
+        self.cursor.execute(
+            "SELECT * FROM users WHERE user_name = '{}'" .format(user_name)
+        )
+        return self.cursor.fetchone()
+    def getoneUser(self, _uid):
+        """get one user"""
+        self.cursor.execute(
+            "SELECT * FROM users WHERE user_id = %s", [_uid]
+        )
+        _users = self.cursor.fetchall()
+        if _users:
+            for user in _users:
+                return ("user: {0}".format(user)) 
+        else:
+            return ("no user with that id")
+    def deloneuser(self, _uid):
+        """delete one user"""
+        self.cursor.execute(
+            # "DELETE FROM users WHERE user_id = %s", [_uid]
+            "UPDATE users SET status_delete=TRUE WHERE user_id = %s", [_uid]
+        )
+    def check_user_exists_id(self, user_id):
+        """check if user exists"""
+        self.cursor.execute(
+            "SELECT * FROM users WHERE user_id = %s", [user_id]) 
+        return self.cursor.fetchone()  
+    def modify_user(self, name, user_name, password, role, user_id):
+        """modify user"""
+        self.cursor.execute(
+            "UPDATE users SET name='{}', user_name='{}', password='{}', role='{}' WHERE user_id = {}"
+            .format(name, user_name, password, role, user_id)
+        ) 
     
-    #     if table == "sales":
-    #             self.cursor.execute(
-    #                     """
-    #                     INSERT INTO sales(sale_id, product_id, user_id, quantity, total, date) 
-    #                         VALUES({}, {}, {}, {}, {}, '{}');
-    #                     """
-    #                 )
+
+
+
+
+
+
+
+        # if table == "sales":
+        #         self.cursor.execute(
+        #                 """
+        #                 INSERT INTO sales(sale_id, product_id, user_id, quantity, total, date) 
+        #                     VALUES({}, {}, {}, {}, {}, '{}');
+        #                 """
+        #             )
 
     #     if table == "users":
     #             self.cursor.execute(
