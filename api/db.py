@@ -20,9 +20,10 @@ class Sales:
 
 class Users:
     """user model"""
-    def __init__(self, name, password, role, date):
+    def __init__(self, name, user_name, password, role, date):
         # self.user_id = user_id
         self.name = name
+        self.user_name = user_name
         self.password = password
         self.role = role
         self.date = date
