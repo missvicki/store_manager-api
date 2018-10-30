@@ -9,6 +9,7 @@ Flask==1.0.2
 Flask-HTTPAuth==3.2.4
 Flask-HTTPBasicAuth==1.0.1
 Flask-HTTPS==0.1.0
+Flask-JWT==0.3.2
 Flask-SQLAlchemy==2.3.2
 isort==4.3.4
 itsdangerous==0.24
@@ -22,6 +23,7 @@ nose-cov==1.6
 pluggy==0.8.0
 psycopg2==2.7.5
 py==1.7.0
+PyJWT==1.4.2
 pylint==2.1.1
 pytest==3.9.2
 six==1.11.0

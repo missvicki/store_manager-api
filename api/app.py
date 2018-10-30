@@ -1,125 +1,13 @@
 """!Flask web api for Store Manager"""
 from flask import Flask, jsonify, abort, make_response, request
+from flask_jwt import JWT, jwt_required, current_identity
+from werkzeug.security import safe_str_cmp
+from models import DatabaseConnection
+from db import Products, Sales, Users
 
 app = Flask(__name__)
 """initializing"""
 
-PRODUCTS = [
-    {
-        'product_id': 1,
-        'product_name': 'Sugar',
-        'category': 'Food',
-        'unit_price': 4000,
-        'quantity' : 100,
-        'measure' : 'Kg'
-    },
-    {
-        'product_id': 2,
-        'product_name': 'Ariel-Small',
-        'category': 'Detergent',
-        'unit_price': 500,
-        'quantity' : 40,
-        'measure' : 'Pkts'
-    },
-    {
-        'product_id': 3,
-        'product_name': 'Ariel-Big',
-        'category': 'Detergent',
-        'unit_price': 2000,
-        'quantity' : 35,
-        'measure': 'Pkts'
-    },
-    {
-        'product_id': 4,
-        'product_name': 'Broom',
-        'category': 'Home Utilities',
-        'unit_price': 1000,
-        'quantity' : 10,
-        'measure': 'Sticks'
-    },
-    {
-        'product_id': 5,
-        'product_name': '98-Paged Picfare Books',
-        'category': 'Scholastic Materials',
-        'unit_price': 4800,
-        'quantity' : 144,
-        'measure': 'Dozens'
-    },
-    {
-        'product_id': 6,
-        'product_name': 'Bic Pens',
-        'category': 'Scholastic Materials',
-        'unit_price': 5000,
-        'quantity' : 12,
-        'measure': 'Box'
-    },
-    {
-        'product_id': 12,
-        'product_name': 'Vanilla Sponge Cake',
-        'category': 'Baked Goodies',
-        'unit_price': 7500,
-        'quantity' : 3,
-        'measure': 'Slices'
-    },
-    {
-        'product_id': 7,
-        'product_name': 'Always',
-        'category': 'Women Products',
-        'unit_price': 3000,
-        'quantity' : 12,
-        'measure': 'Pkts'
-    },
-    {
-        'product_id': 8,
-        'product_name': 'Vaseline Cocoa',
-        'category': 'Women Products',
-        'unit_price': 12000,
-        'quantity' : 10,
-        'measure': 'Bottles'
-    },
-    {
-        'product_id': 9,
-        'product_name': 'Vaseline Cocoa',
-        'category': 'Men Products',
-        'unit_price': 12000,
-        'quantity' : 10,
-        'measure': 'Bottles'
-    },
-    {
-        'product_id': 10,
-        'product_name': 'Vaseline Men',
-        'category': 'Men Products',
-        'unit_price': 10000,
-        'quantity' : 10,
-        'measure': 'Bottles'
-    },
-    {
-        'product_id': 11,
-        'product_name': 'Zesta Strawberry Jam',
-        'category': 'Food',
-        'unit_price': 7500,
-        'quantity' : 5,
-        'measure': 'Bottles'
-    }
-]
-
-SALES = [
-    {
-        'product_id': 1,
-        'sale_id': 1,
-        'quantity': 2
-    },
-    {
-        'product_id': 1,
-        'sale_id': 2,
-        'quantity': 1
-    },
-    {
-        'product_id': 6,
-        'sale_id': 3,
-        'quantity': 3
-    }
-]
 #error handlers
 @app.errorhandler(404)
 def not_found(error):
@@ -156,6 +44,7 @@ def products():
         else:
             return jsonify({'message': "There are no products"})
     elif request.method == 'POST':
+
         """returns a product that has been added"""
         data = request.get_json()
         prod_name = data.get('product_name')
@@ -164,24 +53,17 @@ def products():
         prod_qty = data.get('quantity')
         prod_meas = data.get('measure')
 
-        productname = [product for product in PRODUCTS if product['product_id']]
-
         if not prod_name or not prod_cat or not prod_price or not prod_qty or not prod_meas:
             return jsonify({'message': "Fields can't be empty"}), 400
         elif not isinstance(prod_price, int) or not isinstance(prod_qty, int):
             return jsonify({'message': "Price and Quantity have to be integers"}), 400
-        elif prod_name is not productname:
-             return jsonify({'message': "Product already exists"}), 400
+        # elif prod_name is not productname:
+        #      return jsonify({'message': "Product already exists"}), 400
         else:
-            _product = {
-                'product_id':PRODUCTS[-1]['product_id'] + 1,
-                'product_name':prod_name,
-                'category':prod_cat,
-                'unit_price':prod_price,
-                'quantity':prod_qty,
-                'measure':prod_meas
-            }
-            PRODUCTS.append(_product)
+            obj_products = Products(prod_name, prod_cat, prod_price, prod_qty, prod_meas)
+            databaseConnect = DatabaseConnection()
+            databaseConnect.insert_data(obj_products)
+            # PRODUCTS.append(_product)
             return jsonify({"Success":"product '{0}' added".format(_product["product_id"])}), 201
     else:
         abort(405)
