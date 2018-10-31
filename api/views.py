@@ -193,7 +193,7 @@ def login():
             # Identity can be any data that is json serializable
             obj_login = Login(user_name, password, role)
             database.insert_table_login(obj_login)
-            access_token = create_access_token(identity=role, expires_delta=datetime.timedelta(days=100))
+            access_token = create_access_token(identity=role)
             return jsonify(access_token="Bearer {}".format(access_token)), 200
     else:
         abort(405)
