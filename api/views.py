@@ -151,7 +151,7 @@ def _users_():
 
 # create user auth
 @app.route('/api/v1/auth/signup', methods=['POST'])
-# @jwt_required
+@jwt_required
 def signup():
         """returns a user that has been added"""
         current_user = get_jwt_identity()
@@ -288,23 +288,25 @@ def _sale():
         """add sales"""
         if current_user == 'attendant':
             data = request.get_json()
-            user_id = data.get('user_id')
-            quantity = data.get('quantity')
-            product_id = data.get('product_id')
+            user_id = int(data.get('user_id'))
+            quantity = int(data.get('quantity'))
+            product_id = int(data.get('product_id'))
 
             # get quantity
-            # getQty = database.getQuantity(product_id)
+            getQty = int(database.getQuantity(product_id))
             # get unit price
-            getPrice = database.getPrice(product_id)
+            getPrice = int(database.getPrice(product_id))
             # calculate total
             total = quantity * getPrice
+            # new qty
+            newqty = getQty - quantity
             # check empty fields
             if not data:
                 return jsonify({'message': "Missing json request"}), 400
             elif not user_id or not quantity or not product_id or not total:
                 return jsonify({'message': "Fields can't be empty"}), 400
             # validate integers
-            elif not isinstance(user_id, int) or not isinstance(quantity, int) or not isinstance(product_id, int) or not isinstance(total, int):
+            elif not isinstance(user_id, int) or not isinstance(quantity, int) or not isinstance(product_id, int) or not isinstance(getQty, int):
                 return jsonify({'message': "fields have to be integers"}), 400
             else:
                 obj_sales = Sales(user_id)
