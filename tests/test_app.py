@@ -8,7 +8,7 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 from api.app import app
-from api.models import DatabaseConnection
+from api.database import DatabaseConnection
 
 app.config['TESTING'] = True
 class TestStoreManagerApi(unittest.TestCase):

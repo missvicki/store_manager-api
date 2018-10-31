@@ -1,7 +1,7 @@
 """Database models"""
 from flask import Flask, jsonify
 import psycopg2
-from db import Products, Sales, Users, SalesHasProducts, Login
+from models import Products, Sales, Users, SalesHasProducts, Login
 
 class DatabaseConnection:
     """Connect to the database"""
