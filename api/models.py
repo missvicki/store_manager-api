@@ -2,15 +2,22 @@
 from flask import Flask, jsonify
 import psycopg2
 from db import Products, Sales, Users, SalesHasProducts, Login
+from app import app
 
 class DatabaseConnection:
     """Connect to the database"""
     def __init__(self):
         try:
-            self.connection = psycopg2.connect(database='storemanager', user='postgres', password='admin', host='localhost', port='5432')
-            self.connection.autocommit = True
-            # allow you to read from and write to database
-            self.cursor = self.connection.cursor()
+            if app.config["TESTING"] == 'testing':
+                self.connection = psycopg2.connect(database='storemanager_test_db', user='postgres', password='admin', host='localhost', port='5432')
+                self.connection.autocommit = True
+                # allow you to read from and write to database
+                self.cursor = self.connection.cursor()
+            else:
+                self.connection = psycopg2.connect(database='storemanager', user='postgres', password='admin', host='localhost', port='5432')
+                self.connection.autocommit = True
+                # allow you to read from and write to database
+                self.cursor = self.connection.cursor()
         except psycopg2.DatabaseError as anything:
             print (anything)
     def drop_tables(self):
@@ -84,6 +91,7 @@ class DatabaseConnection:
             CREATE TABLE IF NOT EXISTS login(
                 user_name VARCHAR(12) NOT NULL,
                 password VARCHAR(12) NOT NULL,
+                role VARCHAR(15) NOT NULL,
                 date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
             """
@@ -103,7 +111,7 @@ class DatabaseConnection:
         """check if product exists"""
         try:
             self.cursor.execute(
-                "SELECT * FROM products WHERE product_name = '{}'" .format(product_name)
+                "SELECT * FROM products WHERE product_name = '{}' status_delete = FALSE" .format(product_name)
             )
             return self.cursor.fetchone()
         except:
@@ -112,7 +120,7 @@ class DatabaseConnection:
         """get all products"""
         try:
             self.cursor.execute(
-                "SELECT * FROM products"
+                "SELECT * FROM products WHERE status_delete = FALSE"
             )
             _products = self.cursor.fetchall()
             return _products 
@@ -122,7 +130,7 @@ class DatabaseConnection:
         """get one product"""
         try:
             self.cursor.execute(
-                "SELECT * FROM products WHERE product_id = %s", [_pid]
+                "SELECT * FROM products WHERE product_id = %s status_delete = FALSE", [_pid]
             )
             _products = self.cursor.fetchall()
             if _products:
@@ -146,7 +154,7 @@ class DatabaseConnection:
     def modify_product(self, product_name, category, unit_price, quantity, measure, product_id):
         """modify product"""
         self.cursor.execute(
-            "UPDATE products SET product_name='{}', category='{}', unit_price={}, quantity={}, measure = '{}' WHERE product_id = {}"
+            "UPDATE products SET product_name='{}', category='{}', unit_price={}, quantity={}, measure = '{}' WHERE product_id = {} status_delete = FALSE"
             .format(product_name, category, unit_price, quantity, measure, product_id)
         ) 
     
@@ -162,9 +170,9 @@ class DatabaseConnection:
         """add data to table login"""
         self.cursor.execute(
             """
-            INSERT INTO login(user_name, password) \
-            VALUES('{}', '{}')
-            """.format(record.user_name, record.password)
+            INSERT INTO login(user_name, password, role) \
+            VALUES('{}', '{}', '{}')
+            """.format(record.user_name, record.password, record.role)
         )
     def getUsers(self):
         """get all users"""
@@ -232,9 +240,9 @@ class DatabaseConnection:
     def getsales(self):
         """get one sale"""
         self.cursor.execute(
-            "SELECT sales.sale_id, users.user_id, products.product_id, \
+            "SELECT sales.sale_id, sales.user_id, products.product_id, \
             saleshasproducts.total, saleshasproducts.quantity, sales.date \
-            FROM saleshasproducts INNER JOIN sales ON sales.sale_id = saleshasproducts.sales_id \
+            FROM saleshasproducts INNER JOIN sales ON sales.sale_id = saleshasproducts.sale_id \
             INNER JOIN products ON products.product_id = saleshasproducts.product_id" 
         )
         _sale = self.cursor.fetchall()
