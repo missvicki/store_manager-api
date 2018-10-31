@@ -5,7 +5,7 @@ from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, g
 from werkzeug.security import check_password_hash, generate_password_hash
 from database import DatabaseConnection
 from models import Products, Sales, Users, Login, SalesHasProducts
-from validations import (validate_add_product)
+from validations import (validate_product, validate_user_signup, validate_user_login, validate_sales)
 
 app = Flask(__name__)
 
@@ -48,13 +48,13 @@ def hello():
 def products():
     """returns all products"""
     if request.method == 'GET':
-            productget = database.getProducts()
-            if productget:
-                return jsonify({'products': productget}), 200
-            else:
-                return jsonify({'message': "There are no products"}), 404
+        productget = database.getProducts()
+        if productget:
+            return jsonify({'products': productget}), 200
+        else:
+            return jsonify({'message': "There are no products"}), 404
   
-    if request.method == 'POST':
+    elif request.method == 'POST':
         """returns a product that has been added"""
         data = request.get_json()
         prod_name = data.get('product_name')
@@ -63,14 +63,12 @@ def products():
         prod_qty = data.get('quantity')
         prod_meas = data.get('measure')
             
-        valprod = validate_add_product(product_name=prod_name, 
-                                       category=prod_cat, 
-                                       unit_price=prod_price, 
-                                       quantity=prod_qty, 
-                                       measure=prod_meas)
-        if not data:
-            return jsonify({'message': "Missing json request"}), 400
-        elif valprod:
+        valprod = validate_product(product_name=prod_name, 
+                                   category=prod_cat, 
+                                   unit_price=prod_price, 
+                                   quantity=prod_qty, 
+                                   measure=prod_meas)
+        if valprod:
             return valprod
         else:
             obj_products = Products(prod_name, prod_cat, prod_price, prod_qty, prod_meas)
@@ -118,12 +116,13 @@ def _product_(_id):
                 prod_price = data.get('unit_price')
                 prod_qty = data.get('quantity')
                 prod_meas = data.get('measure')
-                if not data:
-                    return jsonify({'message': "Missing json request"}), 400
-                elif not prod_name or not prod_cat or not prod_price or not prod_qty or not prod_meas:
-                    return jsonify({'message': "Fields can't be empty"}), 400
-                elif not isinstance(prod_price, int) or not isinstance(prod_qty, int):
-                    return jsonify({'message': "Price and Quantity have to be integers"}), 400
+                valprod = validate_product(product_name=prod_name, 
+                                           category=prod_cat, 
+                                           unit_price=prod_price, 
+                                           quantity=prod_qty, 
+                                           measure=prod_meas)
+                if valprod:
+                    return valprod
                 else:
                     database.modify_product(prod_name, prod_cat, prod_price, prod_qty, prod_meas, _id)
                     return jsonify({"Success": "product has been modified"}), 201
@@ -152,34 +151,27 @@ def _users_():
 @app.route('/api/v1/auth/signup', methods=['POST'])
 @jwt_required
 def signup():
-        """returns a user that has been added"""
-        current_user = get_jwt_identity()
-        if current_user == 'admin':
-            if request.method == 'POST':
-                data = request.get_json()
-                name = data.get('name')
-                user_name = data.get('user_name')
-                password = data.get('password')
-                role = data.get('role')
-                # check if user exists
-                data_user_name_exist = database.check_user_exists_name(user_name)
-                data_user_pass_exist = database.check_user_exists_password(password)
-                if not data:
-                    return jsonify({'message': "Missing json request"}), 400
-                elif not name or not user_name or not password or not role:
-                    return jsonify({'message': "Fields can't be empty"}), 400
-                elif data_user_name_exist:
-                    return jsonify({'error': "user name already exists"}), 400
-                elif data_user_pass_exist:
-                    return jsonify({'error': "try another password-that one may have been used"}), 400
-                else:
-                    obj_users = Users(name, user_name, password, role)
-                    database.insert_table_users(obj_users)
-                    return jsonify({"Success": "user has been added"}), 201
+    """returns a user that has been added"""
+    current_user = get_jwt_identity()
+    if current_user == 'admin':
+        if request.method == 'POST':
+            data = request.get_json()
+            name = data.get('name')
+            user_name = data.get('user_name')
+            password = data.get('password')
+            role = data.get('role')
+
+            valuser = validate_user_signup(name=name, user_name = user_name, password=password, role = role)
+            if valuser:
+                return valuser
             else:
-                return jsonify({"message": "Method not allowed"}), 405
+                obj_users = Users(name, user_name, password, role)
+                database.insert_table_users(obj_users)
+                return jsonify({"Success": "user has been added"}), 201
         else:
-            return jsonify({"message": "You are not authorized"}), 401
+            return jsonify({"message": "Method not allowed"}), 405
+    else:
+        return jsonify({"message": "You are not authorized"}), 401
 # user login
 # Provide a method to create access tokens. The create_access_token()
 # function is used to actually generate the token, and you can return
@@ -193,33 +185,21 @@ def login():
         password = data.get('password')
         role = data.get('role')
 
-        data_user_name_exist = database.check_user_exists_name(user_name)
-        data_user_pass_exist = database.check_user_exists_password(password)
-        data_user_role_exist = database.check_user_exists_role(role, user_name)
-        if not data:
-            return jsonify({'message': "Missing json request"}), 400
-        elif not user_name or not password or not role:
-            return jsonify({'message': "Missing username or password"}), 400
-        elif not data_user_name_exist:
-            return jsonify({'error': "user name does not exist, sign up first"}), 400
-        elif not data_user_pass_exist:
-            return jsonify({'error': "invalid password"}), 400
-        elif not data_user_role_exist:
-            return jsonify({'error': "invalid role"}), 400
+        loguserval = validate_user_login(user_name = user_name, password=password, role = role)
+        if loguserval:
+            return loguserval
         else:
             # Identity can be any data that is json serializable
-            
             obj_login = Login(user_name, password, role)
             database.insert_table_login(obj_login)
             access_token = create_access_token(identity=role, expires_delta=datetime.timedelta(days=100))
             return jsonify(access_token="Bearer {}".format(access_token)), 200
-            # return jsonify({"Success": "user has been logged in"}), 201
     else:
         abort(405)
 
 #delete modify users
 # get specific product and delete a product and modify product
-@app.route('/api/v1/users/<int:_id>', methods=['GET','DELETE', 'PUT'])
+@app.route('/api/v1/users/<int:_id>', methods=['GET','DELETE'])
 @jwt_required
 def _user_(_id):
     current_user = get_jwt_identity()
@@ -242,27 +222,6 @@ def _user_(_id):
             else:
                 database.deloneuser(_id)
                 return jsonify({"message": "user has been deleted successfully"}), 200
-        else:
-            return jsonify({"message": "You are not authorized"}), 401
-    elif request.method == 'PUT':
-        """put user"""
-        if current_user == 'admin':
-            u = database.check_user_exists_id(_id)
-            if not u:
-                return jsonify({"error": "user you are trying to modify does not exist"}), 404
-            else:
-                data = data = request.get_json()
-                name = data.get('name')
-                user_name = data.get('user_name')
-                password = data.get('password')
-                role = data.get('role')
-                if not data:
-                    return jsonify({'message': "Missing json request"}), 400
-                elif not name or not user_name or not password or not role:
-                    return jsonify({'message': "Fields can't be empty"}), 400
-                else:
-                    database.modify_user(name, user_name, password, role, _id)
-                    return jsonify({"Success": "user has been modified"}), 201
         else:
             return jsonify({"message": "You are not authorized"}), 401
     else:
@@ -311,7 +270,7 @@ def _sale():
                 obj_sales = Sales(user_id)
                 database.insert_data_sales(obj_sales)
                 obj_salepdt = SalesHasProducts(product_id, quantity, total)
-                database.insert_data_saleshasproducts(obj_salepdt)
+                database.insert_data_sales_has_products(obj_salepdt)
                 return jsonify({"Success": "user has been added"}), 201
         else:
             return jsonify({"message": "You are not authorized"}), 401
