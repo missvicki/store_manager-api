@@ -1,10 +1,11 @@
 """!Flask web api for Store Manager"""
-from flask import Flask, jsonify, abort, make_response, request
+from flask import Flask, jsonify, abort, request
 import datetime
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_jwt_identity)
 from werkzeug.security import check_password_hash, generate_password_hash
 from database import DatabaseConnection
 from models import Products, Sales, Users, Login, SalesHasProducts
+from validations import (validate_add_product)
 
 app = Flask(__name__)
 
@@ -17,26 +18,26 @@ database.drop_tables()
 database.create_tables()
 database.default_admin()
 
-#error handlers
+ #error handlers
 @app.errorhandler(404)
-def not_found(error):
+def not_found(self, error):
     """ not_found(error) -returns error not found"""
-    return make_response(jsonify({'error': 'NOT FOUND'}), 404)
+    return jsonify({'error': 'NOT FOUND'}), 404
 
 @app.errorhandler(400)
-def bad_request(error):
+def bad_request(self, error):
     """ bad_request(error) -returns error bad request"""
-    return make_response(jsonify({'error': 'BAD REQUEST'}), 400)
+    return jsonify({'error': 'BAD REQUEST'}), 400
 
 @app.errorhandler(405)
-def mtd_not_allowed(error):
+def mtd_not_allowed(self, error):
     """ mtd_not_allowed(error) -returns error method not allowed"""
-    return make_response(jsonify({'error': "METHOD NOT ALLOWED"}), 405)
+    return jsonify({'error': "METHOD NOT ALLOWED"}), 405
 
 @app.errorhandler(401)
-def unauthorized(error):
+def unauthorized(self, error):
     """ unauthorized(error) -returns error unauthorized"""
-    return make_response(jsonify({'error': "NOT AUTHORIZED"}), 401)
+    return jsonify({'error': "NOT AUTHORIZED"}), 401
 
 @app.route('/')
 def hello():
@@ -54,29 +55,27 @@ def products():
                 return jsonify({'message': "There are no products"}), 404
   
     if request.method == 'POST':
-            """returns a product that has been added"""
-            data = request.get_json()
-            prod_name = data.get('product_name')
-            prod_cat = data.get('category')
-            prod_price = data.get('unit_price')
-            prod_qty = data.get('quantity')
-            prod_meas = data.get('measure')
+        """returns a product that has been added"""
+        data = request.get_json()
+        prod_name = data.get('product_name')
+        prod_cat = data.get('category')
+        prod_price = data.get('unit_price')
+        prod_qty = data.get('quantity')
+        prod_meas = data.get('measure')
             
-
-            # check if product exists
-            data_product_name_exist = database.check_product_exists_name(prod_name)
-            if not data:
-                return jsonify({'message': "Missing json request"}), 400
-            elif not prod_name or not prod_cat or not prod_price or not prod_qty or not prod_meas:
-                return jsonify({'message': "Fields can't be empty"}), 400
-            elif not isinstance(prod_price, int) or not isinstance(prod_qty, int):
-                return jsonify({'message': "Price and Quantity have to be integers"}), 400
-            elif data_product_name_exist:
-                return jsonify({'message': "Product already exists"}), 400
-            else:
-                obj_products = Products(prod_name, prod_cat, prod_price, prod_qty, prod_meas)
-                database.insert_data_products(obj_products)
-                return jsonify({"Success": "product has been added"}), 201
+        valprod = validate_add_product(product_name=prod_name, 
+                                       category=prod_cat, 
+                                       unit_price=prod_price, 
+                                       quantity=prod_qty, 
+                                       measure=prod_meas)
+        if not data:
+            return jsonify({'message': "Missing json request"}), 400
+        elif valprod:
+            return valprod
+        else:
+            obj_products = Products(prod_name, prod_cat, prod_price, prod_qty, prod_meas)
+            database.insert_data_products(obj_products)
+            return jsonify({"Success": "product has been added"}), 201
     else:
         abort(405)
 

@@ -63,7 +63,7 @@ class DatabaseConnection:
         self.cursor.execute(
             """
             CREATE TABLE IF NOT EXISTS saleshasproducts(
-                sale_id NOT NULL,
+                sale_id integer NOT NULL,
                 product_id integer NOT NULL,
                 quantity integer NOT NULL,
                 total integer NOT NULL,
