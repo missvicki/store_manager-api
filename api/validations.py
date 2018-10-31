@@ -35,13 +35,9 @@ def validate_user_signup(**kwargs):
         return jsonify({"error": "fields should not be empty"}), 400
 
     # check if user exists
-    data_user_name_exist = db.check_user_exists_name(user_name)
-    data_user_pass_exist = db.check_user_exists_password(password)
-
-    if data_user_name_exist:
-        return jsonify({'error': "user name already exists"}), 400
-    if data_user_pass_exist:
-        return jsonify({'error': "try another password-that one may have been used"}), 400
+    data_user_exist = db.check_user_exists(user_name, password, role)
+    if data_user_exist:
+        return jsonify({'error': "user with that username already exists"}), 400
 
 def validate_user_login(**kwargs):
     user_name = kwargs.get("user_name")
@@ -52,15 +48,26 @@ def validate_user_login(**kwargs):
     if not user_name or not password or not role:
         return jsonify({"error": "fields should not be empty"}), 400
     
-    data_user_name_exist = db.check_user_exists_name(user_name)
-    data_user_pass_exist = db.check_user_exists_password(password)
-    data_user_role_exist = db.check_user_exists_role(role, user_name)
-
-    if not data_user_name_exist:
-        return jsonify({'error': "user name does not exist, sign up first"}), 400
-    if not data_user_pass_exist:
-        return jsonify({'error': "invalid password"}), 400
-    if not data_user_role_exist:
-        return jsonify({'error': "invalid role"}), 400
+    data_user_exist = db.check_user_exists(user_name, password, role)
+    if not data_user_exist:
+        return jsonify({'error': "user with that username, password, role doesn't exist"}), 400
+    
 def validate_sales(**kwargs):
     """validate sales"""
+    user_id = kwargs.get("user_id")
+    product_id = kwargs.get("product_id")
+    quantity = kwargs.get("quantity")
+
+    if not user_id or not quantity or not product_id:
+        return jsonify({'message': "Fields can't be empty"}), 400
+    if type(product_id) is not int or type(quantity) is not int or type(user_id) is not int:
+        return jsonify({'message': "fields have to be integers"}), 400
+    #check if product exists
+    # check if user exists
+    product = db.getoneProduct(product_id)
+    user = db.getoneUser(user_id)
+    if not product or not user:
+        return jsonify({"error": "This product or user doesn't exist"}), 404
+    data_user_exist = db.check_user_exists_id(user_id)
+    if not data_user_exist:
+        return jsonify({'error': "user does not exist"}), 400
