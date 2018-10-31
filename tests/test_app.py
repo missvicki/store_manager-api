@@ -7,7 +7,7 @@ import json
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-from api.app import app
+from api.views import app
 from api.database import DatabaseConnection
 
 app.config['TESTING'] = True
