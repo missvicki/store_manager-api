@@ -1,6 +1,7 @@
 """Database models"""
 from flask import Flask, jsonify
 import psycopg2
+import datetime
 from models import Products, Sales, Users, SalesHasProducts, Login
 
 class DatabaseConnection:
@@ -29,8 +30,8 @@ class DatabaseConnection:
                 unit_price integer NOT NULL, 
                 quantity integer NOT NULL, 
                 measure VARCHAR(12) NOT NULL,
-                date_created DATE DEFAULT CURRENT_DATE,
-                date_modified DATE DEFAULT CURRENT_DATE,
+                date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                date_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 delete_status BOOLEAN DEFAULT FALSE);
             """
         )
@@ -43,8 +44,8 @@ class DatabaseConnection:
                 user_name VARCHAR(12) NOT NULL UNIQUE, 
                 password VARCHAR(12) UNIQUE NOT NULL, 
                 role VARCHAR(15) NOT NULL,
-                date_created DATE DEFAULT CURRENT_DATE,
-                date_modified DATE DEFAULT CURRENT_DATE,
+                date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                date_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 delete_status BOOLEAN DEFAULT FALSE);
             """
         )
@@ -54,8 +55,8 @@ class DatabaseConnection:
             CREATE TABLE IF NOT EXISTS sales (
                 sale_id SERIAL PRIMARY KEY,  
                 user_id integer NOT NULL,
-                date_created DATE DEFAULT CURRENT_DATE,
-                date_modified DATE DEFAULT CURRENT_DATE,
+                date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                date_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 delete_status BOOLEAN DEFAULT FALSE,
                 CONSTRAINT userid_foreign FOREIGN KEY (user_id) 
                     REFERENCES users(user_id) 
@@ -87,8 +88,8 @@ class DatabaseConnection:
                 user_name VARCHAR(12) NOT NULL,
                 password VARCHAR(12) NOT NULL,
                 role VARCHAR(15) NOT NULL,
-                date_created DATE DEFAULT CURRENT_DATE,
-                date_modified DATE DEFAULT CURRENT_DATE
+                date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                date_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
             """
         )
@@ -99,7 +100,8 @@ class DatabaseConnection:
             self.cursor.execute(
                 """
                 INSERT INTO products(product_name, category, unit_price, quantity, measure) \
-                VALUES('{}', '{}', {}, {}, '{}')""".format(data.product_name, data.category, data.unit_price, data.quantity, data.measure)
+                VALUES('{}', '{}', {}, {}, '{}')""".format(data.product_name, data.category, 
+                data.unit_price, data.quantity, data.measure)
             )
         except:
             return False
@@ -140,17 +142,20 @@ class DatabaseConnection:
         """delete one product"""
         self.cursor.execute(
             # "DELETE FROM products WHERE product_id = %s", [_pid]
-            "UPDATE products SET delete_status=TRUE WHERE product_id = %s", [_pid]
+            "UPDATE products SET delete_status=TRUE , date_modified =CURRENT_TIMESTAMP WHERE product_id = {}".format(_pid
+            )
         )
     def check_product_exists_id(self, product_id):
         """check if product exists"""
         self.cursor.execute(
             "SELECT * FROM products WHERE product_id = %s AND delete_status= FALSE", [product_id]) 
         return self.cursor.fetchone()  
-    def modify_product(self, product_name, category, unit_price, quantity, measure, product_id):
+    def modify_product(self, product_name, category, unit_price, quantity, measure,product_id):
         """modify product"""
         self.cursor.execute(
-            "UPDATE products SET product_name='{}', category='{}', unit_price={}, quantity={}, measure = '{}' WHERE product_id = {} AND delete_status = FALSE"
+            "UPDATE products SET product_name='{}', category='{}', \
+            unit_price={}, quantity={}, measure = '{}', date_modified=CURRENT_TIMESTAMP\
+            WHERE product_id = {} AND delete_status = FALSE"
             .format(product_name, category, unit_price, quantity, measure, product_id)
         ) 
     
@@ -185,22 +190,10 @@ class DatabaseConnection:
         )
         _users = self.cursor.fetchall()
         return _users 
-    def check_user_exists_name(self, user_name):
+    def check_user_exists(self, user_name, password, role):
         """check if user exists"""
         self.cursor.execute(
-            "SELECT * FROM users WHERE user_name = '{}' AND delete_status= FALSE" .format(user_name)
-        )
-        return self.cursor.fetchone()
-    def check_user_exists_role(self, role, user_name):
-        """check if role exists"""
-        self.cursor.execute(
-            "SELECT * FROM users WHERE role = '{}' AND user_name='{}' AND delete_status= FALSE" .format(role, user_name)
-        )
-        return self.cursor.fetchone()
-    def check_user_exists_password(self, password):
-        """check if user exists"""
-        self.cursor.execute(
-            "SELECT * FROM users WHERE password = '{}' AND delete_status= FALSE" .format(password)
+            "SELECT * FROM users WHERE user_name = '{}' AND password = '{}' AND role = '{}' AND delete_status= FALSE" .format(user_name, password, role)
         )
         return self.cursor.fetchone()
     def getoneUser(self, _uid):
@@ -218,36 +211,27 @@ class DatabaseConnection:
         """delete one user"""
         self.cursor.execute(
             # "DELETE FROM users WHERE user_id = %s", [_uid]
-            "UPDATE users SET delete_status=TRUE WHERE user_id = %s", [_uid]
+            "UPDATE users SET delete_status=TRUE, date_modified= CURRENT_TIMESTAMP WHERE user_id = {}".format(_uid)
         )
     def check_user_exists_id(self, user_id):
         """check if user exists"""
         self.cursor.execute(
             "SELECT * FROM users WHERE user_id = %s AND delete_status= FALSE", [user_id]) 
         return self.cursor.fetchone()  
-    def modify_user(self, name, user_name, password, role, user_id):
-        """modify user"""
-        self.cursor.execute(
-            "UPDATE users SET name='{}', user_name='{}', password='{}', role='{}' WHERE user_id = {}"
-            .format(name, user_name, password, role, user_id)
-        ) 
     def insert_data_sales(self, data):
         """insert data into sales table"""
-        self.cursor.execute(
-            """
-            INSERT INTO sales(user_id) \
-            VALUES({})
-            """.format(data.user_id)
+        self.cursor.execute("INSERT INTO sales(user_id) VALUES({}) RETURNING sale_id".format(data.user_id)
         )
-        
+        return self.cursor.fetchone()[0]
     def insert_data_sales_has_products(self, data):
         """insert data into salesproducts table"""
         self.cursor.execute(
             """
-            INSERT INTO sales_has_products(product_id, quantity, total) \
-            VALUES({}, {}, {})
-            """.format(data.product_id, data.quantity, data.total)
+            INSERT INTO sales_has_products(sale_id, product_id, quantity, total) \
+            VALUES({}, {}, {}, {})
+            """.format(data.sale_id, data.product_id, data.quantity, data.total)
         )
+        
     def getsales(self):
         """get one sale"""
         self.cursor.execute(
@@ -263,21 +247,18 @@ class DatabaseConnection:
         self.cursor.execute(
             "SELECT quantity FROM products WHERE product_id = %s AND delete_status= FALSE", [id_]
         )
-        return self.cursor.fetchone()
+        return self.cursor.fetchone()[0]
+
     def getPrice(self, id_):
         """get price"""
         self.cursor.execute(
             "SELECT unit_price FROM products WHERE product_id = %s AND delete_status= FALSE", [id_]
         )
-        return self.cursor.fetchone()
-    def getSaleId(self, id_):
-        """get sale"""
-        self.cursor.execute(
-            "SELECT sale_id FROM sales WHERE sale_id = %s AND delete_status= FALSE", [id_]
-        )
-        return self.cursor.fetchone()
+        return self.cursor.fetchone()[0]
     def updateProductqty(self, qty, pdtid):
         """update pdt qty"""
         self.cursor.execute(
-            "UPDATE products SET quantity={} WHERE product_id = {} AND delete_status=False".format(qty, pdtid)
+            "UPDATE products SET quantity={}, date_modified=CURRENT_TIMESTAMP WHERE product_id = {} \
+            AND delete_status=False".format(qty, pdtid)
         )
+
