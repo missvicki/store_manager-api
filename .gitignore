@@ -1,6 +1,8 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
+/__pycache__/
 .pytest_cache
+/api/__pycache__
+/tests/__pycache__
 
 # Unit test / coverage reports
 .coverage
