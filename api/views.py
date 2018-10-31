@@ -116,6 +116,7 @@ def _product_(_id):
                 prod_price = data.get('unit_price')
                 prod_qty = data.get('quantity')
                 prod_meas = data.get('measure')
+
                 valprod = validate_product(product_name=prod_name, 
                                            category=prod_cat, 
                                            unit_price=prod_price, 
@@ -250,28 +251,31 @@ def _sale():
             quantity = int(data.get('quantity'))
             product_id = int(data.get('product_id'))
 
-            # get quantity
-            getQty = int(database.getQuantity(product_id))
-            # get unit price
-            getPrice = int(database.getPrice(product_id))
-            # calculate total
-            total = quantity * getPrice
-            # new qty
-            newqty = getQty - quantity
             # check empty fields
-            if not data:
-                return jsonify({'message': "Missing json request"}), 400
-            elif not user_id or not quantity or not product_id or not total:
-                return jsonify({'message': "Fields can't be empty"}), 400
-            # validate integers
-            elif not isinstance(user_id, int) or not isinstance(quantity, int) or not isinstance(product_id, int) or not isinstance(getQty, int):
-                return jsonify({'message': "fields have to be integers"}), 400
+            valsale=validate_sales(user_id=user_id,product_id=product_id,quantity=quantity)
+            if valsale:
+                return valsale
             else:
+                # insert into sales tab;e
                 obj_sales = Sales(user_id)
-                database.insert_data_sales(obj_sales)
-                obj_salepdt = SalesHasProducts(product_id, quantity, total)
-                database.insert_data_sales_has_products(obj_salepdt)
-                return jsonify({"Success": "user has been added"}), 201
+                saleid = database.insert_data_sales(obj_sales)
+                # get quantity
+                getQty = int(database.getQuantity(product_id))
+                if quantity > getQty:
+                    return jsonify({"error": "The product's quantity is not enough for you to make sale"}), 400
+                else:
+                    # get unit price
+                    getPrice = int(database.getPrice(product_id))
+                    # calculate total
+                    total = quantity * getPrice
+                    # new qty
+                    newqty = getQty - quantity
+                    #insert into sale has products table
+                    obj_salepdt = SalesHasProducts(saleid, product_id, quantity, total)
+                    database.insert_data_sales_has_products(obj_salepdt)
+                    #update products table
+                    database.updateProductqty(newqty, product_id)
+                    return jsonify({"Success": "sale has been added"}), 201
         else:
             return jsonify({"message": "You are not authorized"}), 401
     else:
