@@ -7,64 +7,102 @@ import json
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-from api.app import PRODUCTS, SALES, app
+from api.app import app
+from api.models import DatabaseConnection
 
-BASE_URL_PRODUCTS = 'http://127.0.0.1:5000/api/v1/products'
-BAD_ITEM_URL_PRODUCTS = '{}/16'.format(BASE_URL_PRODUCTS)
-GOOD_ITEM_URL_PRODUCTS = '{}/10'.format(BASE_URL_PRODUCTS)
-
-BASE_URL_SALES = 'http://127.0.0.1:5000/api/v1/sales'
-BAD_ITEM_URL_SALES = '{}/4'.format(BASE_URL_SALES)
-GOOD_ITEM_URL_SALES = '{}/3'.format(BASE_URL_SALES)
-
+app.config['TESTING'] = True
 class TestStoreManagerApi(unittest.TestCase):
     """TestStoreManagerApi(unittest.TestCase)--holds all tests we shall perform"""
     def setUp(self):
         """setUp(self)---"""
-        self.backup_products = deepcopy(PRODUCTS)
-        self.backup_sales = deepcopy(SALES)
+        self.db = DatabaseConnection()
         self.app = app.test_client()
-        self.app.testing = True
+        self.login_user = {
+            "user_name": "vicky",
+            "password":"victor"
+        }
+        self.user_data = {
+            "name":"Vicky",
+            "user_name":"vicky",
+            "password":"victor",
+            "role":"admin"
+        }
+        self.product = {
+            "product_name": "Sugar",
+            "category":"Food",
+            "unit-price":4100,
+            "quantity": 20,
+            "measure":"Kgs"
+        }
+        self.sale = {
+            "user_id":1,
+            "product_id":1,
+            "quantity":2
+        }
 
     def test_get_all_products(self):
         """test_get_all_products(self)---"""
-        response_products = self.app.get(BASE_URL_PRODUCTS)
-        data_products = json.loads(response_products.get_data())
+        response_products = self.app.get("/api/v1/products")
+        data_products = json.loads(response_products.data())
         self.assertEqual(response_products.status_code, 200, msg="Found Products")
-        self.assertEqual(len(data_products['products']), 11)
 
     def test_get_all_sales(self):
         """test_get_all_sales(self)---"""
-        response_sales = self.app.get(BASE_URL_SALES)
-        data_sales = json.loads(response_sales.get_data())
+        response_sales = self.app.get("/api/v1/sales")
+        data_sales = json.loads(response_sales.data())
         self.assertEqual(response_sales.status_code, 200, msg="Found Sales")
-        self.assertEqual(len(data_sales['sales']), 3)
 
     def test_get_one_product(self):
         """test__get_one_product(self)---"""
-        response_product = self.app.get(BASE_URL_PRODUCTS)
-        data_products = json.loads(response_product.get_data())
+        productid = self.db.getProducts()[0]["product_id"]
+        response_product = self.app.get("/api/v1/products/"+int(productid))
+        data_products = json.loads(response_product.data())
         self.assertEqual(response_product.status_code, 200, msg="Found Product")
-        self.assertEqual(data_products['products'][0]['product_name'], 'Sugar')
 
     def test_product_not_exist(self):
         """test_product_not_exist(self) --"""
-        response_product = self.app.get(BAD_ITEM_URL_PRODUCTS)
+        response_product = self.app.get("/api/v1/products/2")
         self.assertEqual(response_product.status_code, 404, msg="Didn't find product")
     
-    def test_post_products(self):
+    def test_post_products_valid(self):
         """test_post_products(self)"""
-        product = { "product_name": "Bic Pens",
-                   "unit_price": 5000,
-                   "quantity": 1, "category": "school", "measure": "boxes"}
-        response_product = self.app.post(BASE_URL_PRODUCTS,
-                                      data=json.dumps(product),
+        response_product = self.app.post("/api/v1/products",
+                                      data=json.dumps(self.product),
                                       content_type='application/json')
         data = json.loads(response_product.data)
-        product["product_id"] = 1
-        self.assertEqual(response_product.status_code, 201, msg="product added")
-       
-        print(data)
+        self.product["product_id"] = 1
+        self.assertEqual(response_product.status_code, 201, msg="product added")      
+
+    def test_post_products_invalidmissing_data(self):
+        """test_post_products(self)"""
+        self.product["product_name"] = ""
+        self.product["category"] = ""
+        self.product["quantity"] = ""
+        self.product["measure"] = ""
+        self.product["unit_price"] = ""
+        response_product = self.app.post("/api/v1/products",
+                                      data=json.dumps(self.product),
+                                      content_type='application/json')
+        data = json.loads(response_product.data)
+        self.product["product_id"] = 1
+        self.assertEqual(response_product.status_code, 400, msg="product not added") 
+
+    def test_post_products_invalid_data(self):
+        """test_post_products(self)"""
+        self.product["product_name"] = 2
+        self.product["category"] = 6
+        self.product["quantity"] = "2"
+        self.product["measure"] = 36
+        self.product["unit_price"] = "4100"
+        response_product = self.app.post("/api/v1/products",
+                                      data=json.dumps(self.product),
+                                      content_type='application/json')
+        data = json.loads(response_product.data)
+        self.product["product_id"] = 1
+        self.assertEqual(response_product.status_code, 400, msg="product not added") 
+    
+    # def test_edit_product(self):
+
 
     def test_delete(self):
         response = self.app.delete(GOOD_ITEM_URL_PRODUCTS)
@@ -91,8 +129,8 @@ class TestStoreManagerApi(unittest.TestCase):
     def tearDown(self):
         """tearDown(self)---"""
         # reset app.products app.salesto initial state
-        PRODUCTS = self.backup_products
-        SALE = self.backup_sales
+        # PRODUCTS = self.backup_products
+        # SALE = self.backup_sales
 
 
 if __name__ == "__main__":
