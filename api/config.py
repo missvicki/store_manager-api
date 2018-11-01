@@ -31,7 +31,15 @@ class TestingConfig(BaseConfig):
     DEBUG = True
     TESTING = True
 
+class DeploymentConfig(BaseConfig):
+    """ enables deplyment environment """
+    ENV = 'deploying'
+    DATABASE = 'd5ll442t19st4t'
+    DEBUG = True
+    TESTING = False
+
 env_config = dict(
     development = DevelopmentConfig,
-    testing = TestingConfig
+    testing = TestingConfig,
+    deploying = DeploymentConfig
 )
