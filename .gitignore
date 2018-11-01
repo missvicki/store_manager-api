@@ -2,7 +2,12 @@
 /__pycache__/
 .pytest_cache
 /api/__pycache__
-/tests/__pycache__
+/api/.pytest_cache
+/tests/.pytest_cache
+/tests/__pycache__/
+/api/__pycache__/__init__.cpython-37.pyc
+/tests/__pycache__/__init__.cpython-37.pyc
+/sm
 
 # Unit test / coverage reports
 .coverage
