@@ -39,7 +39,7 @@ class DatabaseConnection:
 
             self.connection.autocommit = True
                 # allow you to read from and write to database
-            self.cursor = self.connection.cursor()    
+            self.cur = self.connection.cursor()    
 
         except psycopg2.DatabaseError as anything:
             print (anything)
@@ -47,14 +47,14 @@ class DatabaseConnection:
     def drop_tables(self):
         """drop tables if exist"""
 
-        self.cursor.execute(
+        self.cur.execute(
             "DROP TABLE IF EXISTS products, users, sales, sales_has_products, login CASCADE"
         )
 
     def create_tables(self):
         """create product table""" 
 
-        self.cursor.execute(
+        self.cur.execute(
             """
             CREATE TABLE IF NOT EXISTS products (
                 product_id SERIAL PRIMARY KEY, 
@@ -70,7 +70,7 @@ class DatabaseConnection:
         )
 
         """create user table"""  
-        self.cursor.execute(
+        self.cur.execute(
             """
             CREATE TABLE IF NOT EXISTS users (
                 user_id SERIAL PRIMARY KEY, 
@@ -85,7 +85,7 @@ class DatabaseConnection:
         )
 
         """create sales table"""  
-        self.cursor.execute(
+        self.cur.execute(
             """
             CREATE TABLE IF NOT EXISTS sales (
                 sale_id SERIAL PRIMARY KEY,  
@@ -100,7 +100,7 @@ class DatabaseConnection:
         )
 
         """create sales has products table"""
-        self.cursor.execute(
+        self.cur.execute(
             """
             CREATE TABLE IF NOT EXISTS sales_has_products(
                 sale_id integer NOT NULL,
@@ -119,7 +119,7 @@ class DatabaseConnection:
         )
 
         """login table create"""
-        self.cursor.execute(
+        self.cur.execute(
             """
             CREATE TABLE IF NOT EXISTS login(
                 user_name VARCHAR(12) NOT NULL,
@@ -135,7 +135,7 @@ class DatabaseConnection:
         """inserts values into table products"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 """
                 INSERT INTO products(product_name, category, unit_price, quantity, measure) \
                 VALUES('{}', '{}', {}, {}, '{}')""".format(data.product_name, data.category, 
@@ -148,10 +148,10 @@ class DatabaseConnection:
         """check if product exists"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "SELECT * FROM products WHERE product_name = '{}' AND delete_status = FALSE" .format(product_name)
             )
-            return self.cursor.fetchone()
+            return self.cur.fetchone()
         except:
             return False
 
@@ -159,10 +159,10 @@ class DatabaseConnection:
         """get all products"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "SELECT * FROM products WHERE delete_status = FALSE"
             )
-            _products = self.cursor.fetchall()
+            _products = self.cur.fetchall()
             for product in _products:
                 return ("products: {0}".format(product))
 
@@ -173,10 +173,10 @@ class DatabaseConnection:
         """get one product"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "SELECT * FROM products WHERE product_id = %s AND delete_status = FALSE", [_pid]
             )
-            _products = self.cursor.fetchall()
+            _products = self.cur.fetchall()
 
             if _products:
                 for products in _products:
@@ -190,7 +190,7 @@ class DatabaseConnection:
     def deloneProduct(self, _pid):
         """delete one product"""
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 # "DELETE FROM products WHERE product_id = %s", [_pid]
                 "UPDATE products SET delete_status=TRUE , date_modified =CURRENT_TIMESTAMP WHERE product_id = {}".format(_pid
                 )
@@ -202,9 +202,9 @@ class DatabaseConnection:
         """check if product exists"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "SELECT * FROM products WHERE product_id = %s AND delete_status= FALSE", [product_id]) 
-            return self.cursor.fetchone()
+            return self.cur.fetchone()
 
         except:
             return False
@@ -212,7 +212,7 @@ class DatabaseConnection:
     def modify_product(self, product_name, category, unit_price, quantity, measure,product_id):
         """modify product"""
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "UPDATE products SET product_name='{}', category='{}', \
                 unit_price={}, quantity={}, measure = '{}', date_modified=CURRENT_TIMESTAMP\
                 WHERE product_id = {} AND delete_status = FALSE"
@@ -226,7 +226,7 @@ class DatabaseConnection:
         """add data to table users"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 """
                 INSERT INTO users(name, user_name, password, role) \
                 VALUES('{}', '{}', '{}', '{}')
@@ -240,7 +240,7 @@ class DatabaseConnection:
         """inserts default admin"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 """
                 INSERT INTO users(name, user_name, password, role)\
                 VALUES('Vicki', 'vickib', 'vibel', 'admin');
@@ -254,7 +254,7 @@ class DatabaseConnection:
         """add data to table login"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 """
                 INSERT INTO login(user_name, password, role) \
                 VALUES('{}', '{}', '{}')
@@ -267,10 +267,10 @@ class DatabaseConnection:
     def getUsers(self):
         """get all users"""
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "SELECT * FROM users WHERE delete_status= FALSE"
             )
-            _users = self.cursor.fetchall()
+            _users = self.cur.fetchall()
             for user in _users:
                 return ("users: {0}" .format(user))
         except:
@@ -280,10 +280,10 @@ class DatabaseConnection:
         """check if user exists"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "SELECT * FROM users WHERE user_name = '{}' AND password = '{}' AND role = '{}' AND delete_status= FALSE" .format(user_name, password, role)
             )
-            return self.cursor.fetchone()
+            return self.cur.fetchone()
         
         except:
             return False
@@ -292,10 +292,10 @@ class DatabaseConnection:
         """get one user"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "SELECT * FROM users WHERE user_id = %s AND delete_status= FALSE", [_uid]
             )
-            _users = self.cursor.fetchall()
+            _users = self.cur.fetchall()
             if _users:
                 for user in _users:
                     return ("user: {0}".format(user)) 
@@ -309,7 +309,7 @@ class DatabaseConnection:
         """delete one user"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 # "DELETE FROM users WHERE user_id = %s", [_uid]
                 "UPDATE users SET delete_status=TRUE, date_modified= CURRENT_TIMESTAMP WHERE user_id = {}".format(_uid)
             )
@@ -320,9 +320,9 @@ class DatabaseConnection:
         """check if user exists"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "SELECT * FROM users WHERE user_id = %s AND delete_status= FALSE", [user_id]) 
-            return self.cursor.fetchone()
+            return self.cur.fetchone()
 
         except:
             return False
@@ -331,9 +331,9 @@ class DatabaseConnection:
         """insert data into sales table"""
 
         try:
-            self.cursor.execute("INSERT INTO sales(user_id) VALUES({}) RETURNING sale_id".format(data.user_id)
+            self.cur.execute("INSERT INTO sales(user_id) VALUES({}) RETURNING sale_id".format(data.user_id)
             )
-            return self.cursor.fetchone()[0]
+            return self.cur.fetchone()[0]
         
         except:
             return False
@@ -342,7 +342,7 @@ class DatabaseConnection:
         """insert data into salesproducts table"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 """
                 INSERT INTO sales_has_products(sale_id, product_id, quantity, total) \
                 VALUES({}, {}, {}, {})
@@ -356,13 +356,13 @@ class DatabaseConnection:
         """get one sale"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "SELECT sales.sale_id, sales.user_id, products.product_id, \
                 sales_has_products.total, sales_has_products.quantity, sales.date_created, sales.date_modified \
                 FROM sales_has_products, sales, products WHERE sales.sale_id = sales_has_products.sale_id \
                 AND products.product_id = sales_has_products.product_id" 
             )
-            _sale = self.cursor.fetchall()
+            _sale = self.cur.fetchall()
             for sale in _sale:
                 return ("sales: {0}" .format(sale))
         
@@ -373,10 +373,10 @@ class DatabaseConnection:
         """get qty"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "SELECT quantity FROM products WHERE product_id = %s AND delete_status= FALSE", [id_]
             )
-            return self.cursor.fetchone()[0]
+            return self.cur.fetchone()[0]
         
         except:
             return False
@@ -385,10 +385,10 @@ class DatabaseConnection:
         """get price"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "SELECT unit_price FROM products WHERE product_id = %s AND delete_status= FALSE", [id_]
             )
-            return self.cursor.fetchone()[0]
+            return self.cur.fetchone()[0]
         
         except:
             return False
@@ -397,7 +397,7 @@ class DatabaseConnection:
         """update pdt qty"""
 
         try:
-            self.cursor.execute(
+            self.cur.execute(
                 "UPDATE products SET quantity={}, date_modified=CURRENT_TIMESTAMP WHERE product_id = {} \
                 AND delete_status=False".format(qty, pdtid)
             )
