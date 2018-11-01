@@ -8,15 +8,32 @@ from api.config import env_config
 class DatabaseConnection:
     """Connect to the database"""
     def __init__(self):
-
+        self.connection = psycopg2.connect(database='storemanager_test_db', user='postgres', password='admin', host='localhost', port='5432')
+        self.connection.autocommit = True
+        # allow you to read from and write to database
+        self.cursor = self.connection.cursor()
         try:
+            databaseCredential = """
+            database='storemanager_test_db'
+            user='postgres' 
+            password='admin'
+            host='localhost'
+            port='5432'
+            """
+            databaseCredential_ = """
+            database='storemanager'
+            user='postgres' 
+            password='admin'
+            host='localhost'
+            port='5432'
+            """
             if env_config['testing'] == True:
-                self.connection = psycopg2.connect(database='storemanager_test_db', user='postgres', password='admin', host='localhost', port='5432')
+                self.connection = psycopg2.connect(databaseCredential)
                 self.connection.autocommit = True
                 # allow you to read from and write to database
                 self.cursor = self.connection.cursor()
             else:
-                self.connection = psycopg2.connect(database='storemanager', user='postgres', password='admin', host='localhost', port='5432')
+                self.connection = psycopg2.connect(databaseCredential_)
                 self.connection.autocommit = True
                 # allow you to read from and write to database
                 self.cursor = self.connection.cursor()
