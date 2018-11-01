@@ -65,7 +65,7 @@ For installation of this project:  `$ git clone 'https://github.com/missvicki/st
 
 `$nosetests --with-cov --cov  tests/`
   
-##Language
+## Language
 
 **Python**: 3.6.5
 
