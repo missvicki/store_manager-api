@@ -57,10 +57,8 @@ For installation of this project:  `$ git clone 'https://github.com/missvicki/st
 | GET | [/api/v1/sales](https://store-manager-api-.herokuapp.com/api/v1/sales) | Fetches all sales |
 | GET | [/api/v1/sales/user_id](https://store-manager-api-.herokuapp.com/api/v1/sales/2) | Fetches a single sales of an attendant |
 | GET | [/api/v1/users](https://store-manager-api-.herokuapp.com/api/v1/users) | Fetches all users |
-| DELETE | [/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/api/v1/products/1) | Deletes a single
- product |
-| DELETE | [/api/v1/users/user_id](https://store-manager-api-.herokuapp.com/api/v1/users/1) | Deletes a single
- product |
+| DELETE | [/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/api/v1/products/1) | Deletes a product |
+| DELETE | [/api/v1/users/user_id](https://store-manager-api-.herokuapp.com/api/v1/users/1) | Deletes a single user |
 | PUT | [/api/v1/products/product_id](https://store-manager-api-.herokuapp.com/api/v1/products/1) | Modifies a single product |
 
 ## Testing the app
