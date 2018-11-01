@@ -5,7 +5,7 @@ from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, g
 from werkzeug.security import check_password_hash, generate_password_hash
 from database import DatabaseConnection
 from models import Products, Sales, Users, Login, SalesHasProducts
-from validations import (validate_product, validate_user_signup, validate_user_login, validate_sales)
+from validations import (validate_product, validate_user_signup, validate_user_login, validate_sales, validate_sales_)
 
 app = Flask(__name__)
 
@@ -248,38 +248,53 @@ def _sale():
         if current_user == 'attendant':
             data = request.get_json()
             user_id = int(data.get('user_id'))
-            quantity = int(data.get('quantity'))
-            product_id = int(data.get('product_id'))
 
             # check empty fields
-            valsale=validate_sales(user_id=user_id,product_id=product_id,quantity=quantity)
+            valsale=validate_sales(user_id=user_id)
             if valsale:
                 return valsale
             else:
                 # insert into sales tab;e
                 obj_sales = Sales(user_id)
-                saleid = database.insert_data_sales(obj_sales)
-                # get quantity
-                getQty = int(database.getQuantity(product_id))
-                if quantity > getQty:
-                    return jsonify({"error": "The product's quantity is not enough for you to make sale"}), 400
-                else:
-                    # get unit price
-                    getPrice = int(database.getPrice(product_id))
-                    # calculate total
-                    total = quantity * getPrice
-                    # new qty
-                    newqty = getQty - quantity
-                    #insert into sale has products table
-                    obj_salepdt = SalesHasProducts(saleid, product_id, quantity, total)
-                    database.insert_data_sales_has_products(obj_salepdt)
-                    #update products table
-                    database.updateProductqty(newqty, product_id)
-                    return jsonify({"Success": "sale has been added"}), 201
+                database.insert_data_sales(obj_sales)
+                return jsonify({"Success": "sale has been added"}), 201
         else:
             return jsonify({"message": "You are not authorized"}), 401
     else:
         abort(405)
+@app.route('/api/v1/sales/<int:saleid>', methods=['POST'])
+@jwt_required
+def addsaletosaleprodtable(saleid):
+    current_user = get_jwt_identity()
+    if request.method == 'POST':
+        if current_user == 'attendant':
+            data = request.get_json()
+            quantity = int(data.get('quantity'))
+            product_id = int(data.get('product_id'))
 
+            # check empty fields
+            valsale=validate_sales_(product_id=product_id,quantity=quantity)
+            if valsale:
+                return valsale
+            else:
+                # get quantity
+                getQty = int(database.getQuantity(product_id))
+                # if quantity > getQty or quantity != 0 or getQty != 0:
+                #     return jsonify({"error": "The product's quantity is not enough for you to make sale"}), 400
+                # else:
+                    # get unit price
+                getPrice = int(database.getPrice(product_id))
+                # calculate total
+                total = quantity * getPrice
+                # new qty
+                newqty = getQty - quantity
+                    #insert into sale has products table
+                obj_salepdt = SalesHasProducts(saleid, product_id, quantity, total)
+                database.insert_data_sales_has_products(obj_salepdt)
+                #update products table
+                database.updateProductqty(newqty, product_id)
+                return jsonify({"Success": "sale has been added"}), 201
+    else:
+        abort(405)
 if __name__ == '__main__':
     app.run(debug=True)
