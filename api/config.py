@@ -9,7 +9,7 @@ class BaseConfig:
     """environment configurations """
     DEBUG = False
     TESTING = False
-    SECRET_KEY = 'secret'
+    JWT_SECRET_KEY = 'secret'
     JWT_ACCESS_TOKEN_EXPIRES = False
     JWT_TOKEN_LOCATION = ['headers']
     JWT_HEADER_NAME = 'Authorization'
