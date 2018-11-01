@@ -27,8 +27,22 @@ class DatabaseConnection:
             host='localhost'
             port='5432'
             """
+            _databaseCredential_ = """
+            database='d5ll442t19st4t'
+            user='ptlamqvmvizpvv' 
+            password='ada2b20d19532983892990bc0262c38e6e2d68c9e491c191e556ee015491dfcb71min'
+            host='ec2-23-23-101-25.compute-1.amazonaws.com'
+            port='5432'
+            uri='postgres://ptlamqvmvizpvv:a2b20d19532983892990bc0262c38e6e2d68c9e491c191e556ee015491dfcb71@ec2-23-23-101-25.compute-1.amazonaws.com:5432/d5ll442t19st4t'
+            """
             if env_config['testing'] == True:
                 self.connection = psycopg2.connect(databaseCredential)
+                self.connection.autocommit = True
+                # allow you to read from and write to database
+                self.cursor = self.connection.cursor()
+
+            elif env_config['deploying'] == True:
+                self.connection = psycopg2.connect(_databaseCredential_)
                 self.connection.autocommit = True
                 # allow you to read from and write to database
                 self.cursor = self.connection.cursor()
