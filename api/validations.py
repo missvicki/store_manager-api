@@ -1,6 +1,6 @@
 """validations class"""
 from flask import jsonify
-from api.database import DatabaseConnection
+from database import DatabaseConnection
 
 db = DatabaseConnection()
 
@@ -34,6 +34,9 @@ def validate_user_signup(**kwargs):
     if not name or not user_name or not password or not role:
         return jsonify({"error": "fields should not be empty"}), 400
 
+    if type(name) is int or type(user_name) is int or type(role) is int:
+        return jsonify({"error": "some fields should not be int"}), 400
+
     # check if user exists
     data_user_exist = db.check_user_exists(user_name, password, role)
     if data_user_exist:
@@ -47,7 +50,10 @@ def validate_user_login(**kwargs):
     #check empty fields
     if not user_name or not password or not role:
         return jsonify({"error": "fields should not be empty"}), 400
-    
+
+    if type(user_name) is int or type(role) is int:
+        return jsonify({"error": "some fields should not be int"}), 400
+
     data_user_exist = db.check_user_exists(user_name, password, role)
     if not data_user_exist:
         return jsonify({'error': "user with that username, password, role doesn't exist"}), 400
@@ -78,7 +84,7 @@ def validate_sales(**kwargs):
     # check if user exists
     user = db.getoneUser(user_id)
     if not user:
-        return jsonify({"error": "This user doesn't exist"}), 404
+        return jsonify({"error": "This user is not an attendant"}), 404
     data_user_exist = db.check_user_exists_id(user_id)
     if not data_user_exist:
         return jsonify({'error': "user does not exist"}), 400
