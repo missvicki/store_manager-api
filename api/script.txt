@@ -1,0 +1,83 @@
+"""Products"
+{
+    "product_name": "Sugar",
+    "category": "Food",
+    "unit_price":4100,
+    "quantity":10,
+    "measure":"Kgs"
+}
+"Sales"
+{
+    "user_id": 2,
+    "product_id":1,
+    "quantity":2
+}
+"invalid pdt"
+{
+    "product_name": "",
+    "category": "Food",
+    "unit_price":,
+    "quantity":10,
+    "measure":"Kgs"
+}
+{
+    "product_name": 5,
+    "category": "Food",
+    "unit_price":4100,
+    "quantity":10,
+    "measure":"Kgs"
+}
+{
+    "product_name": "Sugar",
+    "category": "Food",
+    "unit_price":"4100",
+    "quantity":10,
+    "measure":"Kgs"
+}
+add user
+{
+    "name": "max",
+    "user_name":"max",
+    "password":"massimo",
+    "role":"admin"
+}
+{
+    "name": "penny",
+    "user_name":"penny",
+    "password":"penny",
+    "role":"attendant"
+}
+{
+    "name": "jim",
+    "user_name":"jim",
+    "password":"jim",
+    "role":"attendant"
+}
+invalid user
+{
+    "name": "",
+    "user_name":"max",
+    "password":6,
+    "role":"admin"
+}
+login
+{
+    "user_name":"max",
+    "password":"massimo",
+    "role":"admin"
+}
+{
+    "user_name":"penny",
+    "password":"penny",
+    "role":"attendant"
+}
+{
+    "user_name":6,
+    "password":"",
+    "role":"attendant"
+}
+{
+    "user_name":"penny",
+    "password":"",
+    "role":"attendant"
+}
