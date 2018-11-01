@@ -3,15 +3,22 @@ from flask import Flask, jsonify
 import psycopg2
 import datetime
 from models import Products, Sales, Users, SalesHasProducts, Login
+from config import env_config
 
 class DatabaseConnection:
     """Connect to the database"""
     def __init__(self):
         try:
-            self.connection = psycopg2.connect(database='storemanager', user='postgres', password='admin', host='localhost', port='5432')
-            self.connection.autocommit = True
-            # allow you to read from and write to database
-            self.cursor = self.connection.cursor()
+            if env_config['testing'] == True:
+                self.connection = psycopg2.connect(database='storemanager_test_db', user='postgres', password='admin', host='localhost', port='5432')
+                self.connection.autocommit = True
+                # allow you to read from and write to database
+                self.cursor = self.connection.cursor()
+            else:
+                self.connection = psycopg2.connect(database='storemanager', user='postgres', password='admin', host='localhost', port='5432')
+                self.connection.autocommit = True
+                # allow you to read from and write to database
+                self.cursor = self.connection.cursor()
         except psycopg2.DatabaseError as anything:
             print (anything)
     def drop_tables(self):
@@ -213,16 +220,19 @@ class DatabaseConnection:
             # "DELETE FROM users WHERE user_id = %s", [_uid]
             "UPDATE users SET delete_status=TRUE, date_modified= CURRENT_TIMESTAMP WHERE user_id = {}".format(_uid)
         )
+
     def check_user_exists_id(self, user_id):
         """check if user exists"""
         self.cursor.execute(
             "SELECT * FROM users WHERE user_id = %s AND delete_status= FALSE", [user_id]) 
         return self.cursor.fetchone()  
+
     def insert_data_sales(self, data):
         """insert data into sales table"""
         self.cursor.execute("INSERT INTO sales(user_id) VALUES({}) RETURNING sale_id".format(data.user_id)
         )
         return self.cursor.fetchone()[0]
+
     def insert_data_sales_has_products(self, data):
         """insert data into salesproducts table"""
         self.cursor.execute(
@@ -236,12 +246,13 @@ class DatabaseConnection:
         """get one sale"""
         self.cursor.execute(
             "SELECT sales.sale_id, sales.user_id, products.product_id, \
-            sales_has_products.total, sales_has_products.quantity, sales.date \
-            FROM sales_has_products WHERE delete_status= FALSE INNER JOIN sales ON sales.sale_id = sales_has_products.sale_id \
-            INNER JOIN products ON products.product_id = sales_has_products.product_id" 
+            sales_has_products.total, sales_has_products.quantity, sales.date_created, sales.date_modified \
+            FROM sales_has_products, sales, products WHERE sales.sale_id = sales_has_products.sale_id \
+            AND products.product_id = sales_has_products.product_id" 
         )
         _sale = self.cursor.fetchall()
         return _sale
+
     def getQuantity(self, id_):
         """get qty"""
         self.cursor.execute(
@@ -255,6 +266,7 @@ class DatabaseConnection:
             "SELECT unit_price FROM products WHERE product_id = %s AND delete_status= FALSE", [id_]
         )
         return self.cursor.fetchone()[0]
+
     def updateProductqty(self, qty, pdtid):
         """update pdt qty"""
         self.cursor.execute(
