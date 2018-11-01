@@ -128,9 +128,11 @@ class DatabaseConnection:
                 "SELECT * FROM products WHERE delete_status = FALSE"
             )
             _products = self.cursor.fetchall()
-            return _products 
+            for product in _products:
+                return ("products: {0}".format(product))
         except:
             return False
+
     def getoneProduct(self, _pid):
         """get one product"""
         try:
@@ -152,11 +154,13 @@ class DatabaseConnection:
             "UPDATE products SET delete_status=TRUE , date_modified =CURRENT_TIMESTAMP WHERE product_id = {}".format(_pid
             )
         )
+
     def check_product_exists_id(self, product_id):
         """check if product exists"""
         self.cursor.execute(
             "SELECT * FROM products WHERE product_id = %s AND delete_status= FALSE", [product_id]) 
         return self.cursor.fetchone()  
+
     def modify_product(self, product_name, category, unit_price, quantity, measure,product_id):
         """modify product"""
         self.cursor.execute(
@@ -174,6 +178,7 @@ class DatabaseConnection:
             VALUES('{}', '{}', '{}', '{}')
             """.format(record.name, record.user_name, record.password, record.role)
         )
+
     def default_admin(self):
         """inserts default admin"""
         self.cursor.execute(
@@ -182,6 +187,7 @@ class DatabaseConnection:
             VALUES('Vicki', 'vickib', 'vibel', 'admin');
             """
         )
+
     def insert_table_login(self, record):
         """add data to table login"""
         self.cursor.execute(
@@ -190,19 +196,23 @@ class DatabaseConnection:
             VALUES('{}', '{}', '{}')
             """.format(record.user_name, record.password, record.role)
         )
+
     def getUsers(self):
         """get all users"""
         self.cursor.execute(
             "SELECT * FROM users WHERE delete_status= FALSE"
         )
         _users = self.cursor.fetchall()
-        return _users 
+        for user in _users:
+            return ("users: {0}" .format(user))
+
     def check_user_exists(self, user_name, password, role):
         """check if user exists"""
         self.cursor.execute(
             "SELECT * FROM users WHERE user_name = '{}' AND password = '{}' AND role = '{}' AND delete_status= FALSE" .format(user_name, password, role)
         )
         return self.cursor.fetchone()
+
     def getoneUser(self, _uid):
         """get one user"""
         self.cursor.execute(
@@ -214,6 +224,7 @@ class DatabaseConnection:
                 return ("user: {0}".format(user)) 
         else:
             return ("no user with that id")
+
     def deloneuser(self, _uid):
         """delete one user"""
         self.cursor.execute(
@@ -251,7 +262,8 @@ class DatabaseConnection:
             AND products.product_id = sales_has_products.product_id" 
         )
         _sale = self.cursor.fetchall()
-        return _sale
+        for sale in _sale:
+            return ("sales: {0}" .format(sale))
 
     def getQuantity(self, id_):
         """get qty"""
