@@ -3,9 +3,10 @@ from flask import Flask, jsonify, abort, request
 import datetime
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_jwt_identity)
 from werkzeug.security import check_password_hash, generate_password_hash
-from api.database import DatabaseConnection
-from api.models import Products, Sales, Users, Login, SalesHasProducts
-from api.validations import (validate_product, validate_user_signup, validate_user_login, validate_sales)
+from database import DatabaseConnection
+from models import Products, Sales, Users, Login, SalesHasProducts
+from validations import (validate_product, validate_user_signup, validate_user_login, validate_sales)
+from config import env_config
 
 app = Flask(__name__)
 
