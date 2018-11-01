@@ -29,19 +29,11 @@ class DatabaseConnection:
             if env_config['testing'] == True:
                 self.connection = psycopg2.connect(databaseCredential)
 
-<<<<<<< HEAD
             # elif env_config['deploying'] == True:
             #     self.connection = psycopg2.connect(_databaseCredential_)
             #     self.connection.autocommit = True
             #     # allow you to read from and write to database
             #     self.cursor = self.connection.cursor()
-=======
-            elif env_config['deploying'] == True:
-                self.connection = psycopg2.connect(_databaseCredential_
-                self.connection.autocommit = True
-                # allow you to read from and write to database
-                self.cursor = self.connection.cursor()
->>>>>>> 63ab33d8754b879dc08d431040abb65a53c9514b
             else:
                 self.connection = psycopg2.connect(_databaseCredential_)
 
