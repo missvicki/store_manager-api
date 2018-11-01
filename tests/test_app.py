@@ -11,18 +11,10 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 from api.views import app
 from api.database import DatabaseConnection
 
-app.config['TESTING'] = True
 class TestStoreManagerApi(unittest.TestCase):
     """TestStoreManagerApi(unittest.TestCase)--holds all tests we shall perform"""
     def setUp(self):
         """setUp(self)---"""
-        try:
-            self.connection = psycopg2.connect(database='storemanager_test_db', user='postgres', password='admin', host='localhost', port='5432')
-            self.connection.autocommit = True
-            # allow you to read from and write to database
-            self.cursor = self.connection.cursor()
-        except psycopg2.DatabaseError as anything:
-            print (anything)
         self.db = DatabaseConnection()
         self.app = app.test_client()
         self.product = {
