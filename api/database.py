@@ -42,7 +42,7 @@ class DatabaseConnection:
                 self.cursor = self.connection.cursor()
 
             elif env_config['deploying'] == True:
-                self.connection = psycopg2.connect(_databaseCredential_)
+                self.connection = psycopg2.connect(_databaseCredential_
                 self.connection.autocommit = True
                 # allow you to read from and write to database
                 self.cursor = self.connection.cursor()
