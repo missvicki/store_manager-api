@@ -2,8 +2,8 @@
 from flask import Flask, jsonify
 import psycopg2
 import datetime
-from models import Products, Sales, Users, SalesHasProducts, Login
-from config import env_config
+from api.models import Products, Sales, Users, SalesHasProducts, Login
+from api.config import env_config
 
 class DatabaseConnection:
     """Connect to the database"""
