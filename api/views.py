@@ -78,7 +78,7 @@ def products():
         else:
             obj_products = Products(prod_name, prod_cat, prod_price, prod_qty, prod_meas)
             database.insert_data_products(obj_products)
-            return jsonify({"Success": "product has been added"}), 201
+            return jsonify({"Success": "you have added a product"}), 201
         
     else:
         abort(405)
@@ -223,7 +223,7 @@ def login():
             obj_login = Login(user_name, password, role)
             database.insert_table_login(obj_login)
             access_token = create_access_token(identity=role)
-            return jsonify(access_token="Bearer {}".format(access_token)), 200
+            return jsonify(access_token="{}".format(access_token)), 200
 
     else:
         abort(405)
