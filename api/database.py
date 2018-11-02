@@ -26,18 +26,12 @@ class DatabaseConnection:
 
         try:
             if env_config['testing'] == True:
-                self.connection = psycopg2.connect(database='storemanager_test_db', user='postgres', password='admin', host='localhost', port='5432')
+                self.connection = psycopg2.connect(database='storemanager', user='postgres', password='admin', host='localhost', port='5432')
                 self.connection.autocommit = True
                 # allow you to read from and write to database
-                self.cur = self.connection.cursor(cursor_factory = RealDictCursor)
-            # elif env_config['deploying']:
-            #     self.connection = psycopg2.connect(database = 'd5ll442t19st4t', password = 'a2b20d19532983892990bc0262c38e6e2d68c9e491c191e556ee015491dfcb71',
-            #     user = 'ptlamqvmvizpvv', port='5432', host='ec2-23-23-101-25.compute-1.amazonaws.com')
-            #     self.connection.autocommit = True
-            #     self.cur = self.connection.cursor()
-            
+                self.cur = self.connection.cursor(cursor_factory = RealDictCursor)          
             else:
-                self.connection = psycopg2.connect(database='storemanager', user='postgres', password='admin', host='localhost', port='5432')
+                self.connection = psycopg2.connect(database='d5ll442t19st4t', user='ptlamqvmvizpvv', password='a2b20d19532983892990bc0262c38e6e2d68c9e491c191e556ee015491dfcb71', host='ec2-23-23-101-25.compute-1.amazonaws.com', port='5432')
                 self.connection.autocommit = True
                 # allow you to read from and write to database
                 self.cur = self.connection.cursor(cursor_factory = RealDictCursor)
