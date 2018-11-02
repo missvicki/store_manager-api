@@ -1,6 +1,7 @@
 """Database models"""
 from flask import Flask, jsonify
 import psycopg2
+from psycopg2.extras import RealDictCursor
 import datetime
 from models import Products, Sales, Users, SalesHasProducts, Login
 from config import env_config
@@ -16,22 +17,6 @@ class DatabaseConnection:
         #         host='localhost',
         #         port = 5432
         #     )
-
-        # if env_config['development']:
-        #     database_name = env_config['development'].DATABASE
-        #     self.datacredentials['database_name'] = database_name
-            
-        # if env_config['testing']:
-        #     database_name = env_config['testing'].DATABASE
-        #     self.datacredentials['database_name'] = database_name
-            
-        # if env_config['deploying']:
-        #     database_name = env_config['deploying'].DATABASE
-        #     self.datacredentials['host'] = env_config['deploying'].HOST
-        #     self.datacredentials['user'] = env_config['deploying'].USER
-        #     self.datacredentials['password'] = env_config['deploying'].PASSWORD
-        #     self.datacredentials['database_name'] = database_name
-        
         # try:
         #     self.connection = psycopg2.connect(host='localhost', user='postgres', database='storemanager', port='5432')
         #     self.connection.autocommit = True
@@ -44,7 +29,7 @@ class DatabaseConnection:
                 self.connection = psycopg2.connect(database='storemanager_test_db', user='postgres', password='admin', host='localhost', port='5432')
                 self.connection.autocommit = True
                 # allow you to read from and write to database
-                self.cur = self.connection.cursor()
+                self.cur = self.connection.cursor(cursor_factory = RealDictCursor)
             # elif env_config['deploying']:
             #     self.connection = psycopg2.connect(database = 'd5ll442t19st4t', password = 'a2b20d19532983892990bc0262c38e6e2d68c9e491c191e556ee015491dfcb71',
             #     user = 'ptlamqvmvizpvv', port='5432', host='ec2-23-23-101-25.compute-1.amazonaws.com')
@@ -55,7 +40,7 @@ class DatabaseConnection:
                 self.connection = psycopg2.connect(database='storemanager', user='postgres', password='admin', host='localhost', port='5432')
                 self.connection.autocommit = True
                 # allow you to read from and write to database
-                self.cur = self.connection.cursor()
+                self.cur = self.connection.cursor(cursor_factory = RealDictCursor)
 
         except psycopg2.DatabaseError as anything:
             print (anything)
@@ -157,6 +142,8 @@ class DatabaseConnection:
                 VALUES('{}', '{}', {}, {}, '{}')""".format(data.product_name, data.category, 
                 data.unit_price, data.quantity, data.measure)
             )
+            products = self.cur.execute.fetchall()
+            return products
         except:
             return False
 
