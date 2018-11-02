@@ -3,9 +3,10 @@ from flask import Flask, jsonify, abort, request
 import datetime
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_jwt_identity)
 from werkzeug.security import check_password_hash, generate_password_hash
-from api.database import DatabaseConnection
-from api.models import Products, Sales, Users, Login, SalesHasProducts
-from api.validations import (validate_product, validate_user_signup, validate_user_login, validate_sales)
+from database import DatabaseConnection
+from models import Products, Sales, Users, Login, SalesHasProducts
+from validations import (validate_product, validate_user_signup, validate_user_login, validate_sales)
+from config import env_config
 
 app = Flask(__name__)
 
@@ -77,7 +78,7 @@ def products():
         else:
             obj_products = Products(prod_name, prod_cat, prod_price, prod_qty, prod_meas)
             database.insert_data_products(obj_products)
-            return jsonify({"Success": "product has been added"}), 201
+            return jsonify({"Success": "you have added a product"}), 201
         
     else:
         abort(405)
@@ -222,7 +223,7 @@ def login():
             obj_login = Login(user_name, password, role)
             database.insert_table_login(obj_login)
             access_token = create_access_token(identity=role)
-            return jsonify(access_token="Bearer {}".format(access_token)), 200
+            return jsonify(access_token="{}".format(access_token)), 200
 
     else:
         abort(405)

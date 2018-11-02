@@ -22,21 +22,25 @@ class TestStoreManagerApi(unittest.TestCase):
             "quantity": 20,
             "measure":"Kgs"
         }
+        self.invalidproduct = {
+            "product_id":1,
+            "product_name": "",
+            "category":"Food",
+            "unit-price":"4100",
+            "quantity": 20,
+            "measure":"Kgs"
+        }
         self.sale = {
             "user_id":1,
-        }
-        self.sale_pdt ={
             "product_id": 1,
             "quantity":6
         }
         self.user_admin = {
-            "name":'hey',
             "username":'admin',
             "password":'admin',
             "role":'admin'
         }
         self.user_attendant = {
-            "name":'hello',
             "username":'attendant',
             "password":'attendant',
             "role" : 'attendant'
@@ -44,18 +48,47 @@ class TestStoreManagerApi(unittest.TestCase):
 
     def test_get_all_products(self):
         """test_get_all_products(self)---"""
+
+        res = self.app.post(
+                '/api/v1/auth/login',
+                data=json.dumps(self.user_attendant),
+                content_type='application/json'
+            )
+        data = json.loads(res.data)
+        token=data.get('message')
+        headers = {'Authorization': f'Bearer {token}'}
+
         response_products = self.app.get("/api/v1/products")
         data_products = json.loads(response_products.data())
         self.assertEqual(response_products.status_code, 200, msg="Found Products")
 
     def test_get_all_sales(self):
         """test_get_all_sales(self)---"""
+        res = self.app.post(
+                '/api/v1/auth/login',
+                data=json.dumps(self.user_admin),
+                content_type='application/json'
+            )
+        data = json.loads(res.data)
+        token=data.get('message')
+        headers = {'Authorization': f'Bearer {token}'}
+
         response_sales = self.app.get("/api/v1/sales")
         data_sales = json.loads(response_sales.data())
         self.assertEqual(response_sales.status_code, 200, msg="Found Sales")
 
     def test_get_one_product(self):
         """test__get_one_product(self)---"""
+
+        res = self.app.post(
+                '/api/v1/auth/login',
+                data=json.dumps(self.user_admin),
+                content_type='application/json'
+            )
+        data = json.loads(res.data)
+        token=data.get('message')
+        headers = {'Authorization': f'Bearer {token}'}
+
         productid = self.db.getProducts()[0]["product_id"]
         response_product = self.app.get("/api/v1/products/"+int(productid))
         data_products = json.loads(response_product.data())
@@ -63,6 +96,15 @@ class TestStoreManagerApi(unittest.TestCase):
 
     def test_product_not_exist(self):
         """test_product_not_exist(self) --"""
+        res = self.app.post(
+                '/api/v1/auth/login',
+                data=json.dumps(self.user_admin),
+                content_type='application/json'
+            )
+        data = json.loads(res.data)
+        token=data.get('message')
+        headers = {'Authorization': f'Bearer {token}'}
+
         response_product = self.app.get("/api/v1/products/2")
         self.assertEqual(response_product.status_code, 404, msg="Didn't find product")
     
@@ -109,7 +151,7 @@ class TestStoreManagerApi(unittest.TestCase):
         token=data.get('message')
         headers = {'Authorization': f'Bearer {token}'}
         response_product = self.app.post("/api/v1/products",
-                                      data=json.dumps(self.invalid_product),
+                                      data=json.dumps(self.invalidproduct),
                                       content_type='application/json',
                                       headers=headers)
         self.assertIn(b'Product name, measure and category are strings, quantity and unit price are integers', response_product.data)      
@@ -126,6 +168,7 @@ class TestStoreManagerApi(unittest.TestCase):
         data = json.loads(res.data)
         token=data.get('message')
         headers = {'Authorization': f'Bearer {token}'}
+
         response = self.app.delete("/api/v1/products/1")
         response_product = self.app.post("/api/v1/products",
                                       data=json.dumps(self.product),
@@ -133,7 +176,7 @@ class TestStoreManagerApi(unittest.TestCase):
                                       headers=headers)
         self.assertEqual(response_product.status_code, 200, msg="Product has been deleted")
         response_product = self.app.post("/api/v1/products",
-                                      data=json.dumps(self.invalid_product),
+                                      data=json.dumps(self.invalidproduct),
                                       content_type='application/json',
                                       headers=headers)
         response = self.app.delete("/api/v1/products/20")
@@ -141,11 +184,29 @@ class TestStoreManagerApi(unittest.TestCase):
 
     def test_sale_not_exist(self):
         """test_sale_not_exist(self) --"""
+        res = self.app.post(
+                '/api/v1/auth/login',
+                data=json.dumps(self.user_admin),
+                content_type='application/json'
+            )
+        data = json.loads(res.data)
+        token=data.get('message')
+        headers = {'Authorization': f'Bearer {token}'}
         response_sale = self.app.get("/api/v1/sales/20")
         self.assertEqual(response_sale.status_code, 404, "Didn't find sale")
     
     def test_post_sales(self):
         """test_post_sales(self)"""
+        
+        res = self.app.post(
+                '/api/v1/auth/login',
+                data=json.dumps(self.user_attendant),
+                content_type='application/json'
+            )
+        data = json.loads(res.data)
+        token=data.get('message')
+        headers = {'Authorization': f'Bearer {token}'}
+
         sale = {"sale_id": 4, "product_id": 6,
                 "quantity": 1}
         response_sale = self.app.post("/api/v1/sales/1",
@@ -157,9 +218,7 @@ class TestStoreManagerApi(unittest.TestCase):
 
     def tearDown(self):
         """tearDown(self)---"""
-        # reset app.products app.salesto initial state
-        # PRODUCTS = self.backup_products
-        # SALE = self.backup_sales
+        self.db.drop_tables()
 
 
 if __name__ == "__main__":

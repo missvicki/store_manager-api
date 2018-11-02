@@ -1,60 +1,46 @@
 """Database models"""
 from flask import Flask, jsonify
 import psycopg2
+from psycopg2.extras import RealDictCursor
 import datetime
-from api.models import Products, Sales, Users, SalesHasProducts, Login
-from api.config import env_config
+from models import Products, Sales, Users, SalesHasProducts, Login
+from config import env_config
 
 class DatabaseConnection:
     """Connect to the database"""
     def __init__(self):
-        
-        try:
-            self.connection = psycopg2.connect(database='storemanager', user='postgres', password='admin', host='localhost', port='5432')
-            databaseCredential = """
-            database='storemanager_test_db'
-            user='postgres' 
-            password='admin'
-            host='localhost'
-            port='5432'
-            """
-            _databaseCredential_ = """
-            database='d5ll442t19st4t'
-            user='ptlamqvmvizpvv' 
-            password='ada2b20d19532983892990bc0262c38e6e2d68c9e491c191e556ee015491dfcb71min'
-            host='ec2-23-23-101-25.compute-1.amazonaws.com'
-            port='5432'
-            uri='postgres://ptlamqvmvizpvv:a2b20d19532983892990bc0262c38e6e2d68c9e491c191e556ee015491dfcb71@ec2-23-23-101-25.compute-1.amazonaws.com:5432/d5ll442t19st4t'
-            """
-            _databaseCredential_ = """
-            database='d5ll442t19st4t'
-            user='ptlamqvmvizpvv' 
-            password='ada2b20d19532983892990bc0262c38e6e2d68c9e491c191e556ee015491dfcb71min'
-            host='ec2-23-23-101-25.compute-1.amazonaws.com'
-            port='5432'
-            uri='postgres://ptlamqvmvizpvv:a2b20d19532983892990bc0262c38e6e2d68c9e491c191e556ee015491dfcb71@ec2-23-23-101-25.compute-1.amazonaws.com:5432/d5ll442t19st4t'
-            """
-            if env_config['testing'] == True:
-                self.connection = psycopg2.connect(databaseCredential)
-                
-            # elif env_config['deploying'] == True:
-            #     self.connection = psycopg2.connect(_databaseCredential_)
-            #     self.connection.autocommit = True
-            #     # allow you to read from and write to database
-            #     self.cursor = self.connection.cursor()
-            else:
-                self.connection = psycopg2.connect(_databaseCredential_)
 
-            self.connection.autocommit = True
+        # self.datacredentials = dict(
+        #         database_name ='',
+        #         user = 'postgres',
+        #         password='admin',
+        #         host='localhost',
+        #         port = 5432
+        #     )
+        # try:
+        #     self.connection = psycopg2.connect(host='localhost', user='postgres', database='storemanager', port='5432')
+        #     self.connection.autocommit = True
+        #     self.cur = self.connection.cursor()
+        # except psycopg2.DatabaseError as anything:
+        #     print (anything)
+
+        try:
+            if env_config['testing'] == True:
+                self.connection = psycopg2.connect(database='storemanager', user='postgres', password='admin', host='localhost', port='5432')
+                self.connection.autocommit = True
                 # allow you to read from and write to database
-            self.cur = self.connection.cursor()    
+                self.cur = self.connection.cursor(cursor_factory = RealDictCursor)          
+            else:
+                self.connection = psycopg2.connect(database='d5ll442t19st4t', user='ptlamqvmvizpvv', password='a2b20d19532983892990bc0262c38e6e2d68c9e491c191e556ee015491dfcb71', host='ec2-23-23-101-25.compute-1.amazonaws.com', port='5432')
+                self.connection.autocommit = True
+                # allow you to read from and write to database
+                self.cur = self.connection.cursor(cursor_factory = RealDictCursor)
 
         except psycopg2.DatabaseError as anything:
             print (anything)
 
     def drop_tables(self):
         """drop tables if exist"""
-
         self.cur.execute(
             "DROP TABLE IF EXISTS products, users, sales, sales_has_products, login CASCADE"
         )
@@ -149,6 +135,8 @@ class DatabaseConnection:
                 VALUES('{}', '{}', {}, {}, '{}')""".format(data.product_name, data.category, 
                 data.unit_price, data.quantity, data.measure)
             )
+            products = self.cur.execute.fetchall()
+            return products
         except:
             return False
 
@@ -171,8 +159,7 @@ class DatabaseConnection:
                 "SELECT * FROM products WHERE delete_status = FALSE"
             )
             _products = self.cur.fetchall()
-            for product in _products:
-                return ("products: {0}".format(product))
+            return _products
 
         except:
             return False
@@ -184,13 +171,8 @@ class DatabaseConnection:
             self.cur.execute(
                 "SELECT * FROM products WHERE product_id = %s AND delete_status = FALSE", [_pid]
             )
-            _products = self.cur.fetchall()
-
-            if _products:
-                for products in _products:
-                    return ("product: {0}".format(products)) 
-            else:
-                return ("no product with that id")
+            _products = self.cur.fetchone()
+            return _products
 
         except:
             return False
@@ -279,8 +261,8 @@ class DatabaseConnection:
                 "SELECT * FROM users WHERE delete_status= FALSE"
             )
             _users = self.cur.fetchall()
-            for user in _users:
-                return ("users: {0}" .format(user))
+            return _users
+
         except:
             return False
 
@@ -301,14 +283,10 @@ class DatabaseConnection:
 
         try:
             self.cur.execute(
-                "SELECT * FROM users WHERE user_id = %s AND delete_status= FALSE", [_uid]
+                "SELECT * FROM users WHERE user_id = %s AND delete_status = FALSE AND role = attendant", [_uid]
             )
-            _users = self.cur.fetchall()
-            if _users:
-                for user in _users:
-                    return ("user: {0}".format(user)) 
-            else:
-                return ("no user with that id")
+            _users = self.cur.fetchone()
+            return _users
 
         except:
             return False
@@ -371,8 +349,8 @@ class DatabaseConnection:
                 AND products.product_id = sales_has_products.product_id" 
             )
             _sale = self.cur.fetchall()
-            for sale in _sale:
-                return ("sales: {0}" .format(sale))
+            return _sale
+
         
         except:
             return False

@@ -35,7 +35,11 @@ class DeploymentConfig(BaseConfig):
     """ enables deplyment environment """
     ENV = 'deploying'
     DATABASE = 'd5ll442t19st4t'
-    DEBUG = True
+    PASSWORD = 'a2b20d19532983892990bc0262c38e6e2d68c9e491c191e556ee015491dfcb71'
+    USER = 'ptlamqvmvizpvv'
+    PORT='5432'
+    HOST='ec2-23-23-101-25.compute-1.amazonaws.com'
+    DEBUG = False
     TESTING = False
 
 env_config = dict(
