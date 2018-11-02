@@ -82,9 +82,9 @@ def validate_sales(**kwargs):
         return jsonify({"error": "This product doesn't exist"}), 404
 
     # check if user exists
-    user = db.getoneUser(user_id)
-    if not user:
-        return jsonify({"error": "This user is not an attendant"}), 404
+    # user = db.getoneUser(user_id)
+    # if not user:
+    #     return jsonify({"error": "This user is not an attendant"}), 404
     data_user_exist = db.check_user_exists_id(user_id)
     if not data_user_exist:
         return jsonify({'error': "user does not exist"}), 400
