@@ -41,7 +41,6 @@ class DatabaseConnection:
 
     def drop_tables(self):
         """drop tables if exist"""
-       
         self.cur.execute(
             "DROP TABLE IF EXISTS products, users, sales, sales_has_products, login CASCADE"
         )
@@ -351,6 +350,7 @@ class DatabaseConnection:
             )
             _sale = self.cur.fetchall()
             return _sale
+
         
         except:
             return False
